@@ -1,0 +1,305 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f7f6;
+    color: #333;
+}
+
+/* --- THANH ĐIỀU HƯỚNG CHUNG (TOP BAR) --- */
+.top-bar {
+    background-color: #ffffff;
+    padding: 15px 30px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.top-bar h2 {
+    margin: 0;
+    color: #333;
+}
+
+.back-btn {
+    background-color: #f38e78; /* Tông màu nâu nhạt hơn */
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+.back-btn:hover {
+    background-color: #e57360;
+}
+
+/* --- KHU VỰC CHÍNH (NHAPHANG-MAIN) --- */
+.nhaphang-main {
+    display: flex;
+    max-width: 1300px;
+    margin: 20px auto;
+    padding: 0 20px;
+    gap: 20px;
+}
+
+.left-panel {
+    flex-grow: 1;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.right-panel {
+    width: 250px;
+    flex-shrink: 0;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* --- NÚT CHỨC NĂNG BÊN PHẢI --- */
+.function-btn {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 10px;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.1s, box-shadow 0.1s;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+}
+
+.function-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Màu sắc theo chức năng */
+.btn-phieu {
+    background-color: #B8734E; /* Màu nâu đất */
+    color: white;
+}
+
+.btn-chitiet {
+    background-color: #d8c3b4; /* Màu nâu nhạt */
+    color: #333;
+}
+
+.btn-loinhuan {
+    background-color: #e4997e; /* Màu nâu cam */
+    color: white;
+}
+
+/* Trạng thái Active */
+.function-btn.active, .function-btn.active:hover {
+    box-shadow: 0 0 0 4px #e57360; /* Viền nổi bật */
+    transform: none;
+}
+
+.btn-phieu.active {
+    background-color: #a86944;
+}
+.btn-chitiet.active {
+    background-color: #c9b19e;
+}
+.btn-loinhuan.active {
+    background-color: #d8836a;
+}
+
+/* --- KHU VỰC HIỂN THỊ DỮ LIỆU --- */
+.empty-state {
+    padding: 50px;
+    text-align: center;
+    color: #999;
+    border: 1px dashed #ccc;
+    margin-top: 20px;
+    border-radius: 8px;
+}
+
+/* --- BẢNG DỮ LIỆU CHUNG (DATA TABLE) --- */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    border-radius: 8px;
+    overflow: hidden; /* Quan trọng để bo góc bảng */
+}
+
+.data-table th, .data-table td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+.data-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.data-table tbody tr:hover {
+    background-color: #f0f0f0;
+}
+
+/* --- CĂN CHỈNH THANH CONTROLS (QUAN TRỌNG NHẤT) --- */
+.controls-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch; 
+    margin-bottom: 15px;
+    gap: 10px;
+    height: 40px; /* Chiều cao cố định */
+}
+
+.controls-bar > div {
+    display: flex;
+    gap: 10px;
+    height: 100%;
+}
+
+/* --- PHONG CÁCH NÚT HÀNH ĐỘNG CHUNG (Thêm, Hiển thị, Sửa, Xóa) --- */
+/* ... (Giữ nguyên các đoạn code CSS trên) ... */
+
+.controls-bar .search-bar {
+    display: flex;
+    max-width: 350px;
+    height: 100%;
+    align-items: center; 
+}
+
+/* PHONG CÁCH CHO Ô TÌM KIẾM */
+.controls-bar input {
+    /* Đảm bảo chiều cao cố định và flex-grow để input được giãn ra */
+    padding: 0 10px; 
+    border: 1px solid #ccc;
+    border-radius: 6px 0 0 6px; 
+    flex-grow: 1;
+    min-width: 200px;
+    height: 40px; 
+    box-sizing: border-box; 
+    line-height: 1.5; 
+}
+/* KẾT THÚC PHẦN SỬA LỖI */
+
+.controls-bar .search-btn {
+    background-color: #FF9800;
+    color: white;
+    border-radius: 0 6px 6px 0;
+    padding: 0 15px;
+    height: 100%;
+    font-size: 14px; 
+}
+
+/* --- ĐIỀU CHỈNH CỤ THỂ CHO NÚT SỬA/XÓA TRONG BẢNG --- */
+.data-table td:last-child {
+    display: flex; /* Sử dụng flexbox để căn chỉnh các nút */
+    flex-direction: column; /* Xếp chồng các nút theo chiều dọc */
+    gap: 5px; /* Khoảng cách giữa các nút */
+    justify-content: center; /* Căn giữa theo chiều dọc của ô */
+    align-items: center; /* Căn giữa theo chiều ngang của ô */
+    padding: 8px; /* Giảm padding của ô để nút trông cân đối hơn */
+}
+
+.data-table .action-btn {
+    height: auto; /* Cho phép nút tự điều chỉnh chiều cao theo nội dung */
+    width: 70px; /* Đặt chiều rộng cố định để các nút đều nhau */
+    padding: 6px 0; /* Padding trên dưới 6px, trái phải 0 (width đã cố định) */
+    display: flex; /* Dùng flexbox để căn giữa text trong nút */
+    justify-content: center; /* Căn giữa text theo chiều ngang */
+    align-items: center; /* Căn giữa text theo chiều dọc */
+    line-height: 1.2; /* Tối ưu hóa line-height */
+}
+
+
+/* --- MODAL CHUNG (THÊM/SỬA) --- */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 500px; 
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.close-btn {
+    font-size: 28px;
+    font-weight: bold;
+    border: none;
+    background: none;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+.form-group input, .form-group select {
+    width: 100%; 
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.form-actions {
+    text-align: right;
+    margin-top: 20px;
+}
+
+.btn-save, .btn-cancel {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+.btn-save {
+    background-color: #4CAF50;
+}
+.btn-cancel {
+    background-color: #95A5A6;
+    margin-left: 10px;
+}
