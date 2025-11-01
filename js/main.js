@@ -968,4 +968,3 @@ function showCategory(category) {
     document.getElementById("home-title").scrollIntoView();
 }
 
-
