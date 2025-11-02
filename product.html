@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Thành viên 2 - Quản lý Loại & Sản phẩm</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Orne -Quản lý loại và sản phẩm</h1>
+
+    <div class="tabs">
+      <div class="tab active" onclick="openTab('tab-categories')">Loại Sản Phẩm</div>
+      <div class="tab" onclick="openTab('tab-products')">Sản Phẩm</div>
+    </div>
+
+    <!-- TAB LOẠI SẢN PHẨM -->
+    <div id="tab-categories" class="tab-content active">
+      <h2>Danh sách loại <button onclick="openCategoryModal()">+ Thêm loại</button></h2>
+      <table id="category-table">
+        <thead><tr><th>ID</th><th>Tên loại</th><th>Trạng thái</th><th>Hành động</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- TAB SẢN PHẨM -->
+    <div id="tab-products" class="tab-content">
+      <h2>Danh sách sản phẩm <button onclick="openProductModal()">+ Thêm sản phẩm</button></h2>
+      <table id="product-table">
+        <thead><tr><th>ID</th><th>Tên</th><th>Loại</th><th>Ẩn</th><th>Hành động</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Modal Loại -->
+  <div id="category-modal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('category-modal')">&times;</span>
+      <h3 id="cat-modal-title">Thêm loại mới</h3>
+      <div class="form-group">
+        <label>Tên loại</label>
+        <input type="text" id="cat-name" />
+      </div>
+      <button onclick="saveCategory()">Lưu</button>
+      <button class="btn-red" onclick="closeModal('category-modal')">Hủy</button>
+    </div>
+  </div>
+
+  <!-- Modal Sản phẩm -->
+  <div id="product-modal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('product-modal')">&times;</span>
+      <h3 id="prod-modal-title">Thêm sản phẩm mới</h3>
+      <div class="form-group">
+        <label>Tên sản phẩm</label>
+        <input type="text" id="prod-name" />
+      </div>
+      <div class="form-group">
+        <label>Loại sản phẩm</label>
+        <select id="prod-category"></select>
+      </div>
+      <div class="form-group">
+        <label>Mô tả</label>
+        <textarea id="prod-desc"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Ảnh sản phẩm (nhiều ảnh)</label>
+        <input type="file" id="prod-images" accept="image/*" multiple onchange="previewImages(event)" />
+        <div class="image-preview" id="image-preview"></div>
+      </div>
+      <button onclick="saveProduct()">Lưu sản phẩm</button>
+      <button class="btn-red" onclick="closeModal('product-modal')">Hủy</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
