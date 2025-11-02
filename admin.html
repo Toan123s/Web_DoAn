@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý cửa hàng</title>
+    <link rel="stylesheet" href="./assets/css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="top-sidebar">
+                <div class="logo-img"><img src="./assets/img/channelLogo.jpg" alt="Logo Channel"></div>
+                <div class="logo-text">Orne</div>
+            </div>
+            <div class="middle-sidebar">
+                <ul class="sidebar-list">
+                    <li class="sidebar-list-item active">
+                        <a href="#" class="sidebar-link">
+                            <span class="fa-solid fa-house"></span>
+                            <span class="hidden-sidebar">Trang tổng quan</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-list-item tab-content">
+                        <a href="#" class="sidebar-link">
+                            <span class="fa-solid fa-box"></span>
+                            <span class="hidden-sidebar">Sản phẩm</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-list-item tab-content">
+                        <a href="#" class="sidebar-link">
+                            <span class="fa-solid fa-users"></span>
+                            <span class="hidden-sidebar">Khách hàng</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-list-item tab-content">
+                        <a href="#" class="sidebar-link">
+                            <span class="fa-solid fa-cart-shopping"></span>
+                            <span class="hidden-sidebar">Đơn hàng</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-list-item tab-content">
+                        <a href="#" class="sidebar-link">
+                            <span class="fa-solid fa-truck-ramp-box"></span>
+                            <span class="hidden-sidebar">Nhập hàng</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-list-item tab-content">
+                        <a href="#" class="sidebar-link">
+                            <span class="fa-solid fa-chart-pie"></span>
+                            <span class="hidden-sidebar">Thống kê</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="bottom-sidebar">
+                <ul class="sidebar-list">
+                    <li class="sidebar-list-item user-logout">
+                        <a href="index.html" class="sidebar-link">
+                            <span class="fa-solid fa-house"></span>
+                            <span class="hidden-sidebar">Trang chủ</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-list-item user-logout"> 
+                        <a href="#" class="sidebar-link"> 
+                            <span class="fa-solid fa-circle-user"></span> 
+                            <span class="hidden-sidebar" id="name-acc"></span> </a> 
+                    </li>
+                    <li class="sidebar-list-item user-logout">
+                        <a href="#" class="sidebar-link" id="logout-acc">
+                            <span class="fa-solid fa-arrow-right-from-bracket"></span>
+                            <span class="hidden-sidebar">Đăng xuất</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </aside>
+        <main class="content">
+            <div class="section active">
+                <h1 class="page-title">Trang tổng quan</h1>
+                <div class="cards">
+                    <div class="card-single">
+                        <div class="box">
+                            <div class="on-box">
+                                <img src="./assets/img/admin/khach_hang.png" alt="" style="width: 200px;">
+                                <h3>Khách hàng</h3>
+                                <p>Khách hàng là những người yêu thích sự tinh tế và sang trọng trong từng sản phẩm thủy tinh. Chúng tôi luôn hướng đến việc mang đến trải nghiệm mua sắm an toàn, nhanh chóng và đáng tin cậy.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-single">
+                        <div class="box">
+                            <div class="on-box">
+                                <img src="./assets/img/admin/san_pham.png" alt="" style="width: 200px;">
+                                <h3>Sản phẩm</h3>
+                                <p>Sản phẩm tại chúng tôi bao gồm các loại ly, bình, lọ và vật trang trí bằng thủy tinh cao cấp. Mỗi sản phẩm đều được chọn lọc kỹ lưỡng để đảm bảo độ trong suốt, bền đẹp và mang lại giá trị thẩm mỹ cao.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-single">
+                        <div class="box">
+                            <div class="on-box">
+                                <img src="./assets/img/admin/doanh_thu.png" alt="" style="width: 200px;">
+                                <h3>Doanh thu</h3>
+                                <p>Doanh thu phản ánh kết quả hoạt động kinh doanh của cửa hàng. Chúng tôi không ngừng nỗ lực cải thiện chất lượng sản phẩm và dịch vụ để mang lại giá trị tốt nhất cho khách hàng và tăng trưởng doanh thu bền vững.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="section" id="products">
+                <h1 class="page-title">Sản phẩm</h1>
+                <p>Danh sách sản phẩm sẽ hiển thị tại đây...</p>
+            </div>
+            <div class="section" id="customers">
+                <h1 class="page-title">Khách hàng</h1>
+                <div class="admin-control">
+                    <div class="admin-control-left">
+                        <select name="tinh-trang-user" id="tinh-trang-user" onchange="showUser()">
+                            <option value="2">Tất cả</option>
+                            <option value="1">Hoạt động</option>
+                            <option value="0">Bị khóa</option>
+                        </select>
+                    </div>
+                    <div class="admin-control-center">
+                        <form action="" class="form-search">
+                            <span class="search-btn"><i class="fa-solid fa-magnifying-glass"></i></span>
+                            <input id="form-search-user" type="text" class="form-search-input" placeholder="Tìm kiếm khách hàng..." oninput="showUser()">
+                        </form>
+                    </div>
+                    <div class="admin-control-right">
+                        <form action="" class="fillter-date">
+                            <div>
+                                <label for="time-start">Từ</label>
+                                <input type="date" class="form-control-date" id="time-start-user" onchange="showUser()">
+                            </div>
+                            <div>
+                                <label for="time-end">Đến</label>
+                                <input type="date" class="form-control-date" id="time-end-user" onchange="showUser()">
+                            </div>
+                        </form>      
+                        <button class="btn-reset-order"><i class="fa-solid fa-arrow-rotate-right"></i></button>     
+                        <button id="btn-add-user" class="btn-control-large" onclick="openCreateAccount()"><i class="fa-solid fa-plus"></i> <span>Thêm khách hàng</span></button>          
+                    </div>
+                </div>
+                <div class="table">
+                    <table width="100%">
+                        <thead>
+                            <tr>
+                                <td>STT</td>
+                                <td>Họ và tên</td>
+                                <td>Liên hệ</td>
+                                <td>Ngày tham gia</td>
+                                <td>Tình trạng</td>
+                                <td></td>
+                            </tr>
+                        </thead>
+                        <tbody id="show-user">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="section" id="orders">
+                <h1 class="page-title">Đơn hàng</h1>
+                <p>Danh sách đơn hàng sẽ hiển thị tại đây...</p>
+            </div>
+            <div class="section" id="imports">
+                <h1 class="page-title">Nhập hàng</h1>
+                <p>Thông tin nhập hàng sẽ hiển thị tại đây...</p>
+            </div>
+            <div class="section" id="stats">
+                <h1 class="page-title">Thống kê</h1>
+                <p>Biểu đồ thống kê sẽ hiển thị tại đây...</p>
+            </div>
+            <div class="modal signup">
+            <div class="modal-container">
+                <h3 class="modal-container-title add-account-e">THÊM KHÁCH HÀNG MỚI</h3>
+                <h3 class="modal-container-title edit-account-e">CHỈNH SỬA THÔNG TIN</h3>
+                <button class="modal-close"><i class="fa-regular fa-xmark"></i></button>
+                <div class="form-content sign-up">
+                    <form action="" class="signup-form">
+                        <div class="form-group">
+                            <label for="fullname" class="form-label">Tên đầy đủ</label>
+                            <input id="fullname" name="fullname" type="text" placeholder="VD: Nguyễn Văn A" class="form-control">
+                            <span class="form-message-name form-message"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone" class="form-label">Số điện thoại</label>
+                            <input id="phone" name="phone" type="text" placeholder="Nhập số điện thoại" class="form-control">
+                            <span class="form-message-phone form-message"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="password" class="form-label">Mật khẩu</label>
+                            <input id="password" name="password" type="text" placeholder="Nhập mật khẩu" class="form-control">
+                            <span class="form-message-password form-message"></span>
+                        </div>   
+                        <div class="form-group edit-account-e">
+                            <label for="" class="form-label">Trạng thái</label>
+                            <input type="checkbox" id="user-status" class="switch-input">
+                            <label for="user-status" class="switch"></label>
+                        </div>
+                            <button class="form-submit add-account-e" id="signup-button">Đăng ký</button>
+                            <button class="form-submit edit-account-e" id="btn-update-account"><i class="fa-solid fa-floppy-disk"></i> Lưu thông tin</button>
+                    </form>
+                </div>
+            </div>
+            </div>
+        </main>
+    </div>
+    <script src="./js/admin.js"></script>
+</body>
+</html>
