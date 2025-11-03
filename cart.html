@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Giỏ hàng - Orne Decor</title>
+  <link rel="stylesheet" href="cart.css">
+  <link rel="stylesheet" href="./assets/font/font-awesome-pro-v6-6.2.0/css/all.min.css">
+  <link href="./assets/img/OrneLogo.png" rel="icon" type="image/x-icon" />
+</head>
+<body>
+  <header class="cart-header">
+  <div class="header-container">
+    <a href="index.html" class="header-left">
+      <img src="./assets/img/OrneLogo.png" alt="Logo" class="logo">
+      <span class="divider">|</span>
+      <h2>Giỏ Hàng</h2>
+    </a>
+  </div>
+</header>
+
+
+
+  <main class="cart-container">
+    <section class="cart-list-section">
+      <h3>Sản phẩm đã chọn</h3>
+      <div id="selected-products" class="selected-products"></div>
+      <ul id="cart-list"></ul>
+
+      <!-- THÔNG TIN NGƯỜI NHẬN -->
+      <div class="receiver-info">
+        <h3>Thông tin người nhận</h3>
+        <div class="form-group">
+          <label for="name">Tên người nhận</label>
+          <input type="text" id="name" placeholder="Nhập họ và tên người nhận">
+        </div>
+        <div class="form-group">
+          <label for="phone">Số điện thoại</label>
+          <input type="text" id="phone" placeholder="Nhập số điện thoại">
+        </div>
+        <div class="form-group">
+          <label for="address">Địa chỉ giao hàng</label>
+          <input type="text" id="address" placeholder="Nhập địa chỉ giao hàng">
+        </div>
+      </div>
+
+      <!-- PHƯƠNG THỨC THANH TOÁN -->
+      <div class="form-group">
+        <p id="error-message" style="color:red; font-size:14px; margin-bottom:8px;"></p>
+
+        <label>Phương thức thanh toán</label>
+        <div class="payment-methods">
+          <label><input type="radio" name="payment" value="COD" checked> Thanh toán khi nhận hàng</label><br>
+          <label><input type="radio" name="payment" value="Bank"> Chuyển khoản ngân hàng</label><br>
+          <label><input type="radio" name="payment" value="Momo"> Ví MoMo</label>
+        </div>
+      </div>
+
+      <button id="checkout-btn"><i class="fa-light fa-credit-card"></i> Thanh toán ngay</button>
+    </section>
+
+    <!-- TÓM TẮT ĐƠN HÀNG -->
+    <aside class="cart-summary">
+      <h3>Tóm tắt đơn hàng</h3>
+      <div class="summary-line">
+  <span>Tạm tính:</span>
+  <span id="subtotal">0₫</span>
+</div>
+
+<div class="summary-line">
+  <span>Phí vận chuyển:</span>
+  <span id="shipping">25.000₫</span>
+</div>
+
+<div class="summary-line referral">
+  <label for="referral">Mã giới thiệu:</label>
+  <input type="text" id="referral" placeholder="Nhập mã tại đây">
+  <button id="apply-referral">Áp dụng</button>
+</div>
+
+<div class="summary-line discount">
+  <span>Giảm giá:</span>
+  <span id="discount">0₫</span>
+</div>
+
+<div class="summary-line total">
+  <span>Tổng cộng:</span>
+  <span id="cart-total">0₫</span>
+</div>
+
+    </aside>
+  </main>
+
+  <footer class="footer">
+  <div class="container">
+    <div class="widget-area">
+      <div class="widget-row">
+        <div class="widget-row-col-1">
+          <h3 class="widget-title">VỀ CHÚNG TÔI</h3>
+          <div class="widget-row-col-content">
+            Orne Decor là thương hiệu được thành lập vào năm 100 TCN với tiêu chí đặt chất lượng sản phẩm lên hàng đầu.
+          </div>
+          <div class="widget-social">
+            <div class="widget-social-item"><i class="fab fa-facebook-f"></i></div>
+            <div class="widget-social-item"><i class="fab fa-instagram"></i></div>
+            <div class="widget-social-item"><i class="fab fa-youtube"></i></div>
+            <div class="widget-social-item"><i class="fab fa-tiktok"></i></div>
+          </div>
+        </div>
+
+        <div class="widget-row-col">
+          <h3 class="widget-title">LIÊN KẾT</h3>
+          <ul>
+            <li><a href="#">Về chúng tôi</a></li>
+            <li><a href="#">Sản phẩm</a></li>
+            <li><a href="#">Điều khoản</a></li>
+            <li><a href="#">Liên hệ</a></li>
+            <li><a href="#">Tin tức</a></li>
+          </ul>
+        </div>
+
+        <div class="widget-row-col">
+          <h3 class="widget-title">SẢN PHẨM</h3>
+          <ul>
+            <li><a href="#">Điểm tâm</a></li>
+            <li><a href="#">Món chay</a></li>
+            <li><a href="#">Món mặn</a></li>
+            <li><a href="#">Nước uống</a></li>
+            <li><a href="#">Tráng miệng</a></li>
+          </ul>
+        </div>
+
+        <div class="widget-row-col">
+          <h3 class="widget-title">LIÊN HỆ</h3>
+          <div class="widget-contact">
+            <div class="contact-item">
+              <div class="contact-item-icon"><i class="fas fa-map-marker-alt"></i></div>
+              <div class="contact-content">273 Thiên Đàng, Phường 3, Quận Dẫn Lối, TP Thiên Đàng city</div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-item-icon"><i class="fas fa-phone-alt"></i></div>
+              <div class="contact-content">0123 456 789<br>0987 654 321</div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-item-icon"><i class="fas fa-envelope"></i></div>
+              <div class="contact-content">
+                OrneDecor@sgshop.com<br>
+                OrneServ@T1number1.com
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="copyright-wrap">
+      <div class="container">
+        <p style="text-align:center;">Copyright 2025 Orne shop. All Rights Reserved.</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+  <script src="cart.js"></script>
+  <div id="toast-container"></div>
+
+</body>
+</html>
