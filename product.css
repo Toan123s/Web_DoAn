@@ -6,10 +6,7 @@
 }
 
 body {
-  background: url('ornebackground.jpg') no-repeat center center fixed; 
-  background-size: cover;
-  background-color: rgba(0, 0, 0, 0.5);
-  background-blend-mode: overlay;
+  background-color: #f0f0f0; /* Màu nền mặc định */
 }
 
 .container {
@@ -182,4 +179,14 @@ textarea {
 
 .actions {
   white-space: nowrap;
+}
+
+/* Style cho ảnh trong cột "Ảnh" */
+td img {
+  max-width: 100px; /* Kích thước tối đa cho ảnh trong cột */
+  max-height: 100px;
+  object-fit: cover;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  cursor: pointer;
 }
