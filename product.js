@@ -38,6 +38,9 @@ function renderProducts() {
     if (!p.status) tr.classList.add("hidden");
     const firstImage = p.images.length > 0 ? p.images[0] : '';
     tr.innerHTML = `
+      <td>
+        ${firstImage ? `<img src="${firstImage}" onclick="viewProductImages(${p.id})">` : 'Không có ảnh'}
+      </td>
       <td>${p.id}</td>
       <td>${p.name}</td>
       <td>${p.status ? "Không" : "Có"}</td>
@@ -47,9 +50,6 @@ function renderProducts() {
           ${p.status ? "Ẩn" : "Hiện"}
         </button>
         <button class="btn-small btn-red" onclick="deleteProduct(${p.id})">Xóa</button>
-      </td>
-      <td>
-        ${firstImage ? `<img src="${firstImage}" onclick="viewProductImages(${p.id})">` : 'Không có ảnh'}
       </td>
     `;
     tbody.appendChild(tr);
@@ -174,3 +174,4 @@ function saveProducts() {
 function closeModal(id) {
   document.getElementById(id).style.display = "none";
 }
+
