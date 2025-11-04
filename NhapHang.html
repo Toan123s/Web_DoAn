@@ -5,102 +5,125 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản Lý Nhập Hàng</title>
-    <link rel="stylesheet" href="main.css">
-    </head>
+    <link rel="stylesheet" href="./assets/css/NhapHang.css">
+</head>
 
 <body>
-    <div class="top-bar">
-        <h2>Nhập hàng</h2>
-        <button class="back-btn" onclick="backToMenu()">🔄 Quay lại Menu chính</button> 
-    </div>
+    <!-- ========== WRAPPER BỌC TOÀN BỘ MODULE NHẬP HÀNG ========== -->
+    <div id="nhaphang-module-wrapper">
+        
+        <div class="top-bar">
+            <h2>Nhập hàng</h2>
+            <button class="back-btn" onclick="backToMenu()">🔄 Quay lại Menu chính</button>
+        </div>
 
-    <div class="nhaphang-main">
-        <div class="left-panel">
-            <h3 id="current-mode-title">Khu hiển thị</h3>
-            <div id="display-area">
-                <div class="empty-state">
-                    Chọn chức năng ở khung bên phải để bắt đầu.
+        <div class="nhaphang-main">
+            <div class="left-panel">
+                <h3 id="current-mode-title">Khu hiển thị</h3>
+                <div id="display-area">
+                    <div class="empty-state">
+                        Chọn chức năng ở khung bên phải để bắt đầu.
+                    </div>
                 </div>
+            </div>
+
+            <div class="right-panel">
+                <h3 style="color: #b8734e; margin-bottom: 10px;">Chọn loại chức năng</h3>
+                <button class="function-btn btn-phieu" onclick="showPhieuNhap()">Phiếu nhập hàng</button>
+                <button class="function-btn btn-chitiet" onclick="showChiTietPhieu()">Chi tiết phiếu nhập</button>
+                <button class="function-btn btn-loinhuan" onclick="showLoiNhuan()">
+                    Lợi nhuận & Giá bán
+                </button>
             </div>
         </div>
 
-        <div class="right-panel">
-            <h3 style="color: #b8734e; margin-bottom: 10px;">Chọn loại chức năng</h3>
-            <button class="function-btn btn-phieu" onclick="showPhieuNhap()">Phiếu nhập hàng</button>
-            <button class="function-btn btn-chitiet" onclick="showChiTietPhieu()">Chi tiết phiếu nhập</button>
-            <button class="function-btn btn-loinhuan" onclick="showLoiNhuan()">
-                Lợi nhuận & Giá bán
-            </button>
-        </div>
-    </div>
-
-    <div id="modal-phieu" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="modal-phieu-title">Thêm Phiếu Nhập</h3>
-                <button class="close-btn" onclick="closeModal('modal-phieu')">&times;</button>
+        <!-- MODAL PHIẾU NHẬP -->
+        <div id="modal-phieu" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="modal-phieu-title">Thêm Phiếu Nhập</h3>
+                    <button class="close-btn" onclick="closeModal('modal-phieu')">&times;</button>
+                </div>
+                <form id="form-phieu">
+                    <div class="form-group">
+                        <label for="ma-phieu">Mã phiếu nhập:</label>
+                        <input type="text" id="ma-phieu" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="nha-cung-cap">Nhà cung cấp:</label>
+                        <input type="text" id="nha-cung-cap" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="ngay-nhap">Ngày nhập:</label>
+                        <input type="date" id="ngay-nhap" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="tong-tien">Tổng tiền:</label>
+                        <input type="text" id="tong-tien" placeholder="Tự động tính" disabled>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn-save">💾 Lưu</button>
+                        <button type="button" class="btn-cancel" onclick="closeModal('modal-phieu')">❌ Hủy</button>
+                    </div>
+                </form>
             </div>
-            <form id="form-phieu">
-                <div class="form-group">
-                    <label for="ma-phieu">Mã phiếu nhập:</label>
-                    <input type="text" id="ma-phieu" required>
-                </div>
-                <div class="form-group">
-                    <label for="nha-cung-cap">Nhà cung cấp:</label>
-                    <input type="text" id="nha-cung-cap" required>
-                </div>
-                <div class="form-group">
-                    <label for="ngay-nhap">Ngày nhập:</label>
-                    <input type="date" id="ngay-nhap" required>
-                </div>
-                <div class="form-group">
-                    <label for="tong-tien">Tổng tiền:</label>
-                    <input type="text" id="tong-tien" placeholder="Tự động tính" disabled>
-                </div>
-                <div class="form-actions">
-                    <button type="submit" class="btn-save">💾 Lưu</button>
-                    <button type="button" class="btn-cancel" onclick="closeModal('modal-phieu')">❌ Hủy</button>
-                </div>
-            </form>
         </div>
-    </div>
 
-    <div id="modal-chitiet" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="modal-chitiet-title">Thêm Chi Tiết Phiếu</h3>
-                <button class="close-btn" onclick="closeModal('modal-chitiet')">&times;</button>
+        <!-- MODAL CHI TIẾT PHIẾU -->
+        <div id="modal-chitiet" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="modal-chitiet-title">Thêm Chi Tiết Phiếu</h3>
+                    <button class="close-btn" onclick="closeModal('modal-chitiet')">&times;</button>
+                </div>
+                <form id="form-chitiet">
+                    <div class="form-group">
+                        <label for="ct-ma-phieu">Mã phiếu nhập:</label>
+                        <input type="text" id="ct-ma-phieu" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="ct-ma-sp">Mã sản phẩm:</label>
+                        <input type="text" id="ct-ma-sp" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="ct-ten-sp">Tên sản phẩm:</label>
+                        <input type="text" id="ct-ten-sp" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="ct-so-luong">Số lượng:</label>
+                        <input type="number" id="ct-so-luong" required min="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="ct-don-gia">Đơn giá:</label>
+                        <input type="number" id="ct-don-gia" required min="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="ct-url-anh">Chọn Ảnh Sản Phẩm:</label>
+
+                        <div class="file-upload-wrapper" onclick="document.getElementById('ct-url-anh').click()">
+                            <input type="file" id="ct-url-anh" accept="image/*">
+
+                            <div class="file-upload-btn">
+                                Chọn File
+                            </div>
+
+                            <div class="file-name-display" id="file-name-ct">
+                                Chưa có tệp nào được chọn
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn-save">💾 Lưu</button>
+                        <button type="button" class="btn-cancel" onclick="closeModal('modal-chitiet')">❌ Hủy</button>
+                    </div>
+                </form>
             </div>
-            <form id="form-chitiet">
-                <div class="form-group">
-                    <label for="ct-ma-phieu">Mã phiếu nhập:</label>
-                    <input type="text" id="ct-ma-phieu" required>
-                </div>
-                <div class="form-group">
-                    <label for="ct-ma-sp">Mã sản phẩm:</label>
-                    <input type="text" id="ct-ma-sp" required>
-                </div>
-                <div class="form-group">
-                    <label for="ct-ten-sp">Tên sản phẩm:</label>
-                    <input type="text" id="ct-ten-sp" required>
-                </div>
-                <div class="form-group">
-                    <label for="ct-so-luong">Số lượng:</label>
-                    <input type="number" id="ct-so-luong" required min="1">
-                </div>
-                <div class="form-group">
-                    <label for="ct-don-gia">Đơn giá:</label>
-                    <input type="number" id="ct-don-gia" required min="1">
-                </div>
-                <div class="form-actions">
-                    <button type="submit" class="btn-save">💾 Lưu</button>
-                    <button type="button" class="btn-cancel" onclick="closeModal('modal-chitiet')">❌ Hủy</button>
-                </div>
-            </form>
         </div>
+        
     </div>
+    <!-- ========== KẾT THÚC WRAPPER ========== -->
 
-    <script src="main.js"></script>
+    <script src="./js/NhapHang.js"></script>
 </body>
 
 </html>

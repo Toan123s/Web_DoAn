@@ -90,48 +90,35 @@ function generateUniqueCode(prefix) {
 // =========================================================
 //                   1. CHỨC NĂNG PHIẾU NHẬP HÀNG (PN)
 // =========================================================
-
-/**
- * Hàm chỉ render phần bảng dữ liệu (table)
- * Đảm bảo thanh tìm kiếm không bị reset (mất focus)
- */
 function renderPhieuNhapTable(dataToDisplay) {
-    let tableHTML = `<div id="phieu-table-container">`;
+    let tableHTML = `<div id="phieunhap-table-container">`;
 
     if (dataToDisplay.length === 0) {
-        tableHTML += `
-            <div class="empty-state">
-                ${phieuNhapList.length === 0 ? 'Không có phiếu nhập nào.' : 'Không tìm thấy kết quả phù hợp.'}
-            </div>
-        `;
+        // ... (phần empty state)
     } else {
         tableHTML += `
             <table class="data-table">
                 <thead>
-                    <tr style="background-color: #AED6F1; color: #2E86C1;">
+                    <tr style="background-color: #A9D0F5; color: #154360;">
                         <th style="text-align: left;">Mã Phiếu</th>
                         <th style="text-align: left;">Nhà Cung Cấp</th>
-                        <th style="text-align: left;">Ngày Nhập</th>
-                        <th style="text-align: right;">Tổng Tiền</th>
-                        <th style="text-align: center;">Thao Tác</th>
+                        <th style="text-align: center;">Ngày Nhập</th> <th style="text-align: right;">Tổng Tiền</th>
+                        <th style="text-align: center;">Thao Tác</th> 
                     </tr>
                 </thead>
-                <tbody id="phieu-table-body">
+                <tbody id="phieunhap-table-body">
         `;
 
-        dataToDisplay.forEach(phieu => { 
-            const tongTien = Number(phieu.tongTien) || 0; 
-            const tongTienFormatted = tongTien.toLocaleString('vi-VN');
-            
+        dataToDisplay.forEach(pn => {
+            const ngayNhapFormatted = pn.ngayNhap || 'N/A';
+
             tableHTML += `
-                <tr id="phieu-${phieu.maPhieu}">
-                    <td style="font-weight: 600;">${phieu.maPhieu}</td>
-                    <td>${phieu.nhaCungCap}</td>
-                    <td>${phieu.ngayNhap}</td>
-                    <td style="text-align: right; font-weight: bold; color: #C0392B;">${tongTienFormatted} ₫</td>
-                    <td style="text-align: center;">
-                        <button class="action-btn edit-btn" style="background-color: #FFC107; color: #333; padding: 6px 10px; border-radius: 4px; border: none; cursor: pointer;" onclick="openEditPhieuModal('${phieu.maPhieu}')">Sửa</button>
-                        <button class="action-btn delete-btn" style="background-color: #F44336; color: white; padding: 6px 10px; border-radius: 4px; border: none; cursor: pointer; margin-left: 5px;" onclick="deletePhieuNhap('${phieu.maPhieu}')">Xóa</button>
+                <tr id="phieunhap-${pn.maPhieu}">
+                    <td style="color: #1E88E5; font-weight: 600;">${pn.maPhieu}</td>
+                    <td>${pn.nhaCungCap}</td>
+                    <td style="text-align: center;">${ngayNhapFormatted}</td> <td style="text-align: right; font-weight: bold; color: #27AE60;">${Number(pn.tongTien).toLocaleString('vi-VN')} ₫</td>
+                    <td style="text-align: center;"> <button class="action-btn edit-btn" style="background-color: #FFC107; color: #333; padding: 6px 10px; border-radius: 4px; border: none; cursor: pointer;" onclick="openEditPhieuNhapModal('${pn.maPhieu}')">Sửa</button>
+                        <button class="action-btn delete-btn" style="background-color: #F44336; color: white; padding: 6px 10px; border-radius: 4px; border: none; cursor: pointer; margin-left: 5px;" onclick="deletePhieuNhap('${pn.maPhieu}')">Xóa</button>
                     </td>
                 </tr>
             `;
@@ -142,8 +129,7 @@ function renderPhieuNhapTable(dataToDisplay) {
             </table>
         `;
     }
-
-    tableHTML += `</div>`; 
+    tableHTML += `</div>`;
     return tableHTML;
 }
 
@@ -331,7 +317,7 @@ function deletePhieuNhap(maPhieu) {
 
 
 // =========================================================
-//              2. CHỨC NĂNG CHI TIẾT PHIẾU NHẬP HÀNG (CT)
+//              2. CHỨC NĂNG CHI TIẾT PHIẾU NHẬP HÀNG (CT)
 // =========================================================
 
 /**
@@ -352,10 +338,9 @@ function renderChiTietTable(dataToDisplay) {
                     <tr style="background-color: #F9E79F; color: #D68910;">
                         <th style="text-align: left;">Mã Phiếu Nhập</th>
                         <th style="text-align: left;">Mã Chi Tiết (ID)</th>
-                        <th style="text-align: left;">Mã SP</th>
+                        <th style="text-align: center;">Ảnh</th> <th style="text-align: left;">Mã SP</th>
                         <th style="text-align: left;">Tên SP</th>
-                        <th style="text-align: right;">Số Lượng</th>
-                        <th style="text-align: right;">Đơn Giá</th>
+                        <th style="text-align: center;">Số Lượng</th> <th style="text-align: right;">Đơn Giá</th>
                         <th style="text-align: right;">Thành Tiền</th>
                         <th style="text-align: center;">Thao Tác</th>
                     </tr>
@@ -366,14 +351,18 @@ function renderChiTietTable(dataToDisplay) {
             const soLuong = Number(ct.soLuong) || 0;
             const donGia = Number(ct.donGia) || 0;
             const thanhTien = soLuong * donGia;
+            const urlAnh = ct.urlAnh || ''; 
+            
             tableHTML += `
                 <tr id="chitiet-${ct.maChiTiet}">
                     <td style="color: #1E88E5; font-weight: 600;">${ct.maPhieuNhap}</td>
                     <td>${ct.maChiTiet}</td>
+                    <td class="image-cell" style="text-align: center;"> <img src="${urlAnh}" alt="${ct.tenSP}" style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #ddd;" 
+                             onerror="this.onerror=null;this.src='placeholder.jpg';">
+                    </td>
                     <td>${ct.maSP}</td>
                     <td>${ct.tenSP}</td>
-                    <td style="text-align: right;">${soLuong.toLocaleString('vi-VN')}</td>
-                    <td style="text-align: right;">${donGia.toLocaleString('vi-VN')} ₫</td>
+                    <td style="text-align: center;">${soLuong.toLocaleString('vi-VN')}</td> <td style="text-align: right;">${donGia.toLocaleString('vi-VN')} ₫</td>
                     <td style="text-align: right; font-weight: bold; color: #27AE60;">${thanhTien.toLocaleString('vi-VN')} ₫</td>
                     <td style="text-align: center;">
                         <button class="action-btn edit-btn" style="background-color: #FFC107; color: #333; padding: 6px 10px; border-radius: 4px; border: none; cursor: pointer;" onclick="openEditChiTietModal('${ct.maChiTiet}')">Sửa</button>
@@ -390,7 +379,6 @@ function renderChiTietTable(dataToDisplay) {
     tableHTML += `</div>`; 
     return tableHTML;
 }
-
 
 function showChiTietPhieu(data) {
     const dataToDisplay = data || chiTietPhieuList;
@@ -493,37 +481,65 @@ function openAddChiTietModal() {
     
     const donGiaInput = document.getElementById('ct-don-gia');
     if (donGiaInput) donGiaInput.value = '';
+
+    // ⭐ CẬP NHẬT: Reset trường URL Ảnh
+    const urlAnhInput = document.getElementById('ct-url-anh'); 
+    if (urlAnhInput) urlAnhInput.value = ''; 
     
     openModal('modal-chitiet');
 }
 
-function handleAddChiTiet(e) {
-    e.preventDefault();
-    const maPhieuNhap = document.getElementById('ct-ma-phieu').value.trim().toUpperCase();
+// Hàm chuyển đổi File sang chuỗi Base64
+function getBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+    });
+}
+
+async function handleEditChiTiet(e, maChiTiet, oldMaPhieu) {
+    // ⭐ QUAN TRỌNG: Đảm bảo ngăn chặn mặc định (prevent default) chạy ngay lập tức.
+    e.preventDefault(); 
+    
+    const index = chiTietPhieuList.findIndex(ct => ct.maChiTiet === maChiTiet);
+    if (index === -1) return alert('Lỗi: Không tìm thấy chi tiết phiếu để sửa.');
+
     const maSP = document.getElementById('ct-ma-sp').value.trim().toUpperCase();
-    const tenSP = document.getElementById('ct-ten-sp').value.trim();
     const soLuong = Number(document.getElementById('ct-so-luong').value);
     const donGia = Number(document.getElementById('ct-don-gia').value);
 
-    const phieu = phieuNhapList.find(p => p.maPhieu === maPhieuNhap);
-    if (!phieu) {
-        return alert(`Lỗi: Không tìm thấy Phiếu Nhập có Mã: ${maPhieuNhap}. Vui lòng kiểm tra lại.`);
+// Xử lý tệp ảnh mới
+    const fileInput = document.getElementById('ct-url-anh');
+    let urlAnh = chiTietPhieuList[index].urlAnh; // Giữ lại ảnh cũ
+
+    if (fileInput.files.length > 0) {
+        try {
+            // Nếu có tệp mới, thay thế bằng Base64 của tệp mới
+            urlAnh = await getBase64(fileInput.files[0]);
+        } catch (error) {
+            console.error('Lỗi đọc file:', error);
+            return alert('Lỗi: Không thể đọc tệp ảnh.');
+        }
     }
+    // Hết xử lý tệp ảnh
+
     if (isNaN(soLuong) || isNaN(donGia) || soLuong <= 0 || donGia <= 0) {
-         return alert('Lỗi: Số lượng và Đơn giá phải là số dương.');
+        return alert('Lỗi: Số lượng và Đơn giá phải là số dương.');
     }
 
-    const maChiTiet = generateUniqueCode('CT');
+    chiTietPhieuList[index].maSP = maSP;
+    chiTietPhieuList[index].tenSP = document.getElementById('ct-ten-sp').value.trim();
+    chiTietPhieuList[index].soLuong = soLuong;
+    chiTietPhieuList[index].donGia = donGia;
+    chiTietPhieuList[index].urlAnh = urlAnh; // Cập nhật Base64 mới (hoặc giữ nguyên cũ)
 
-    const newChiTiet = { maChiTiet, maPhieuNhap, maSP, tenSP, soLuong, donGia };
-    chiTietPhieuList.push(newChiTiet);
-
-    updatePhieuNhapTotal(maPhieuNhap);
-    
+    updatePhieuNhapTotal(oldMaPhieu);
     saveData();
     closeModal('modal-chitiet');
     showChiTietPhieu();
-    alert('Thêm chi tiết phiếu thành công!');
+    alert('Sửa chi tiết phiếu thành công!');
 }
 
 function openEditChiTietModal(maChiTiet) {
@@ -553,34 +569,55 @@ function openEditChiTietModal(maChiTiet) {
     
     const donGiaInput = document.getElementById('ct-don-gia');
     if (donGiaInput) donGiaInput.value = chiTiet.donGia;
+
+    // ⭐ CẬP NHẬT: Reset trường input type="file"
+    const urlAnhInput = document.getElementById('ct-url-anh'); 
+    if (urlAnhInput) urlAnhInput.value = ''; // Đây là cách reset file input
     
     openModal('modal-chitiet');
 }
 
-function handleEditChiTiet(e, maChiTiet, oldMaPhieu) {
-    e.preventDefault();
-    const index = chiTietPhieuList.findIndex(ct => ct.maChiTiet === maChiTiet);
-    if (index === -1) return alert('Lỗi: Không tìm thấy chi tiết phiếu để sửa.');
+async function handleAddChiTiet(e) {
+    // ⭐ QUAN TRỌNG: Đảm bảo ngăn chặn mặc định (prevent default) chạy ngay lập tức.
+    e.preventDefault(); 
 
+    const maPhieuNhap = document.getElementById('ct-ma-phieu').value.trim().toUpperCase();
     const maSP = document.getElementById('ct-ma-sp').value.trim().toUpperCase();
+    const tenSP = document.getElementById('ct-ten-sp').value.trim();
     const soLuong = Number(document.getElementById('ct-so-luong').value);
     const donGia = Number(document.getElementById('ct-don-gia').value);
+    
+    // Xử lý tệp ảnh
+    const fileInput = document.getElementById('ct-url-anh');
+    let urlAnh = '';
+    
+    if (fileInput.files.length > 0) {
+        try {
+            urlAnh = await getBase64(fileInput.files[0]); 
+        } catch (error) {
+            console.error('Lỗi đọc file:', error);
+            return alert('Lỗi: Không thể đọc tệp ảnh.');
+        }
+    }
+    // Hết xử lý tệp ảnh
 
+    const phieu = phieuNhapList.find(p => p.maPhieu === maPhieuNhap);
+    if (!phieu) {
+        return alert(`Lỗi: Không tìm thấy Phiếu Nhập có Mã: ${maPhieuNhap}. Vui lòng kiểm tra lại.`);
+    }
     if (isNaN(soLuong) || isNaN(donGia) || soLuong <= 0 || donGia <= 0) {
-         return alert('Lỗi: Số lượng và Đơn giá phải là số dương.');
+        return alert('Lỗi: Số lượng và Đơn giá phải là số dương.');
     }
 
-    chiTietPhieuList[index].maSP = maSP;
-    chiTietPhieuList[index].tenSP = document.getElementById('ct-ten-sp').value.trim();
-    chiTietPhieuList[index].soLuong = soLuong;
-    chiTietPhieuList[index].donGia = donGia;
+    const maChiTiet = generateUniqueCode('CT');
+    const newChiTiet = { maChiTiet, maPhieuNhap, maSP, tenSP, soLuong, donGia, urlAnh }; 
+    chiTietPhieuList.push(newChiTiet);
 
-    updatePhieuNhapTotal(oldMaPhieu);
-    
+    updatePhieuNhapTotal(maPhieuNhap);
     saveData();
     closeModal('modal-chitiet');
     showChiTietPhieu();
-    alert('Sửa chi tiết phiếu thành công!');
+    alert('Thêm chi tiết phiếu thành công!');
 }
 
 function deleteChiTietPhieu(maChiTiet) {
@@ -825,3 +862,22 @@ document.addEventListener('DOMContentLoaded', () => {
     
     backToMenu();
 });
+
+// ⭐ THÊM MỚI: Cập nhật tên file khi người dùng chọn ảnh
+document.addEventListener('DOMContentLoaded', () => {
+    const fileInput = document.getElementById('ct-url-anh');
+    const fileNameDisplay = document.getElementById('file-name-ct');
+
+    if (fileInput && fileNameDisplay) {
+        fileInput.addEventListener('change', function() {
+            if (this.files.length > 0) {
+                // Hiển thị tên file
+                fileNameDisplay.textContent = this.files[0].name;
+            } else {
+                // Nếu hủy chọn
+                fileNameDisplay.textContent = 'Chưa có tệp nào được chọn';
+            }
+        });
+    }
+});
+

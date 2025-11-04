@@ -1,3 +1,18 @@
+/* ========== CSS CHO WRAPPER MODULE NHẬP HÀNG ========== */
+#nhaphang-module-wrapper {
+    width: 100%;
+    min-height: 100vh;
+    background-color: #f4f7f6;
+    font-family: Arial, sans-serif;
+}
+
+/* Reset box-sizing cho toàn bộ elements bên trong wrapper */
+#nhaphang-module-wrapper * {
+    box-sizing: border-box;
+}
+
+/* ========== BẮT ĐẦU CSS CHÍNH ========== */
+
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -22,7 +37,7 @@ body {
 }
 
 .back-btn {
-    background-color: #f38e78; /* Tông màu nâu nhạt hơn */
+    background-color: #f38e78; 
     color: white;
     padding: 10px 15px;
     border: none;
@@ -84,23 +99,23 @@ body {
 
 /* Màu sắc theo chức năng */
 .btn-phieu {
-    background-color: #B8734E; /* Màu nâu đất */
+    background-color: #B8734E;
     color: white;
 }
 
 .btn-chitiet {
-    background-color: #d8c3b4; /* Màu nâu nhạt */
+    background-color: #d8c3b4;
     color: #333;
 }
 
 .btn-loinhuan {
-    background-color: #e4997e; /* Màu nâu cam */
+    background-color: #e4997e;
     color: white;
 }
 
 /* Trạng thái Active */
 .function-btn.active, .function-btn.active:hover {
-    box-shadow: 0 0 0 4px #e57360; /* Viền nổi bật */
+    box-shadow: 0 0 0 4px #e57360;
     transform: none;
 }
 
@@ -130,13 +145,14 @@ body {
     border-collapse: collapse;
     box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     border-radius: 8px;
-    overflow: hidden; /* Quan trọng để bo góc bảng */
+    overflow: hidden; 
 }
 
 .data-table th, .data-table td {
     padding: 12px;
     border: 1px solid #ddd;
     text-align: left;
+    vertical-align: middle; 
 }
 
 .data-table tbody tr:nth-child(even) {
@@ -147,24 +163,66 @@ body {
     background-color: #f0f0f0;
 }
 
-/* --- CĂN CHỈNH THANH CONTROLS (QUAN TRỌNG NHẤT) --- */
+
+/* ⭐ CĂN CHỈNH CÁC CỘT CHỨC NĂNG VÀ DỮ LIỆU TRONG BẢNG ⭐ */
+
+/* Căn giữa tiêu đề (Ảnh, Số Lượng, Thao Tác) */
+.data-table th:nth-child(3), /* Ảnh (vị trí 3 trong CT PN) */
+.data-table th:nth-child(6), /* Số Lượng (vị trí 6 trong CT PN) */
+.data-table th:last-child {
+    text-align: center !important;
+}
+
+/* Căn giữa dữ liệu Ảnh */
+.data-table td:nth-child(3) { 
+    text-align: center !important;
+}
+
+/* Căn giữa dữ liệu Số Lượng */
+.data-table td:nth-child(6) { 
+    text-align: center !important;
+}
+
+/* Đảm bảo Ngày Nhập trong PN cũng được căn giữa */
+/* Giả sử Ngày Nhập là cột thứ 3 trong bảng Phiếu Nhập */
+#phieunhap-table-container .data-table th:nth-child(3) {
+     text-align: center !important;
+}
+#phieunhap-table-container .data-table td:nth-child(3) {
+     text-align: center !important;
+}
+
+
+/* --- CĂN CHỈNH THANH CONTROLS (Thêm, Hiển thị, Tìm kiếm) --- */
 .controls-bar {
     display: flex;
     justify-content: space-between;
-    align-items: stretch; 
+    align-items: center; /* Căn giữa theo chiều dọc toàn bộ thanh bar */
     margin-bottom: 15px;
     gap: 10px;
     height: 40px; /* Chiều cao cố định */
 }
 
-.controls-bar > div {
+/* Khối nút Thêm/Hiển thị */
+.controls-bar > div:first-child { 
     display: flex;
     gap: 10px;
     height: 100%;
 }
 
-/* --- PHONG CÁCH NÚT HÀNH ĐỘNG CHUNG (Thêm, Hiển thị, Sửa, Xóa) --- */
-/* ... (Giữ nguyên các đoạn code CSS trên) ... */
+.controls-bar .green-btn,
+.controls-bar .blue-btn {
+    /* Đảm bảo nút có cùng chiều cao 40px và căn giữa nội dung */
+    height: 100%; 
+    padding: 0 15px; 
+    display: flex;
+    align-items: center; 
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.2s;
+}
 
 .controls-bar .search-bar {
     display: flex;
@@ -175,7 +233,6 @@ body {
 
 /* PHONG CÁCH CHO Ô TÌM KIẾM */
 .controls-bar input {
-    /* Đảm bảo chiều cao cố định và flex-grow để input được giãn ra */
     padding: 0 10px; 
     border: 1px solid #ccc;
     border-radius: 6px 0 0 6px; 
@@ -185,49 +242,74 @@ body {
     box-sizing: border-box; 
     line-height: 1.5; 
 }
-/* KẾT THÚC PHẦN SỬA LỖI */
 
 .controls-bar .search-btn {
+    /* Đảm bảo nút Tìm có cùng chiều cao 40px */
     background-color: #FF9800;
     color: white;
     border-radius: 0 6px 6px 0;
     padding: 0 15px;
     height: 100%;
     font-size: 14px; 
+    display: flex;
+    align-items: center;
 }
 
 /* --- ĐIỀU CHỈNH CỤ THỂ CHO NÚT SỬA/XÓA TRONG BẢNG --- */
 .data-table td:last-child {
-    display: flex; /* Sử dụng flexbox để căn chỉnh các nút */
-    flex-direction: column; /* Xếp chồng các nút theo chiều dọc */
-    gap: 5px; /* Khoảng cách giữa các nút */
-    justify-content: center; /* Căn giữa theo chiều dọc của ô */
-    align-items: center; /* Căn giữa theo chiều ngang của ô */
-    padding: 8px; /* Giảm padding của ô để nút trông cân đối hơn */
+    /* Đảm bảo ô thao tác luôn được căn giữa và xếp chồng nút */
+    text-align: center; 
+    vertical-align: middle; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 5px; 
+    justify-content: center; 
+    align-items: center; 
+    padding: 8px; 
 }
 
 .data-table .action-btn {
-    height: auto; /* Cho phép nút tự điều chỉnh chiều cao theo nội dung */
-    width: 70px; /* Đặt chiều rộng cố định để các nút đều nhau */
-    padding: 6px 0; /* Padding trên dưới 6px, trái phải 0 (width đã cố định) */
-    display: flex; /* Dùng flexbox để căn giữa text trong nút */
-    justify-content: center; /* Căn giữa text theo chiều ngang */
-    align-items: center; /* Căn giữa text theo chiều dọc */
-    line-height: 1.2; /* Tối ưu hóa line-height */
+    height: auto; 
+    width: 70px; /* Chiều rộng cố định cho nút */
+    padding: 6px 0; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    line-height: 1.2; 
+    margin: 0 !important; /* Xóa margin thừa */
+}
+
+
+/* ⭐ CSS CHO ẢNH SẢN PHẨM TRONG BẢNG ⭐ */
+.data-table img {
+    /* Đảm bảo ảnh luôn vừa với ô và căn giữa */
+    max-width: 100%; 
+    height: 40px; 
+    width: 40px; 
+    object-fit: cover;
+    border-radius: 4px; 
+    vertical-align: middle;
+}
+
+.product-image-cell {
+    width: 60px; /* Đặt chiều rộng cho cột ảnh */
+    text-align: center;
 }
 
 
 /* --- MODAL CHUNG (THÊM/SỬA) --- */
+
+/* ⭐ THAY ĐỔI: Tối ưu Modal tổng thể ⭐ */
 .modal {
     display: none;
     position: fixed;
-    z-index: 1000;
+    z-index: 9999;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgba(0, 0, 0, 0.4);
+    background-color: rgba(0,0,0,0.4);
 }
 
 .modal-content {
@@ -237,10 +319,10 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    padding: 20px;
+    padding: 30px; /* Tăng padding */
     border: 1px solid #888;
     width: 80%;
-    max-width: 500px; 
+    max-width: 550px; /* Tăng chiều rộng tối đa */
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
@@ -249,9 +331,12 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid #eee;
+    border-bottom: 2px solid #eee; /* Đường kẻ đậm hơn */
     padding-bottom: 10px;
     margin-bottom: 15px;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #333;
 }
 
 .close-btn {
@@ -264,13 +349,14 @@ body {
 }
 
 .form-group {
-    margin-bottom: 15px;
+    margin-bottom: 20px; /* Tăng khoảng cách giữa các trường */
 }
 
 .form-group label {
     display: block;
     margin-bottom: 5px;
     font-weight: 600;
+    font-size: 14px; /* Giảm kích thước label */
 }
 
 .form-group input, .form-group select {
@@ -281,6 +367,61 @@ body {
     box-sizing: border-box;
 }
 
+/* ⭐ THÊM: LÀM ĐẸP INPUT TYPE="FILE" ⭐ */
+.form-group input[type="file"] {
+    /* Ẩn input mặc định */
+    opacity: 0;
+    width: 0;
+    height: 0;
+    padding: 0;
+    margin: 0;
+    display: block; 
+    position: absolute;
+}
+
+.form-group .file-upload-wrapper {
+    /* Khung chứa giả lập nút và tên file */
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    height: 40px;
+    background-color: #f7f7f7;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    position: relative; /* Đặt lại vị trí tương đối */
+}
+
+.form-group .file-upload-wrapper:hover {
+    border-color: #555;
+}
+
+.form-group .file-upload-btn {
+    /* Nút "Chọn File" tùy chỉnh */
+    background-color: #8C6A4F; 
+    color: white;
+    padding: 8px 15px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+    border-radius: 4px 0 0 4px;
+    flex-shrink: 0;
+}
+
+.form-group .file-name-display {
+    /* Hiển thị tên file */
+    padding-left: 10px;
+    color: #555;
+    font-style: italic;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.5;
+    flex-grow: 1; /* Cho phép nó giãn ra */
+}
+
+/* --- FORM ACTIONS --- */
 .form-actions {
     text-align: right;
     margin-top: 20px;
