@@ -6,7 +6,11 @@
 }
 
 body {
-  background-color: #f0f0f0; /* Màu nền mặc định */
+  /* Thêm ảnh nền */
+  background-image: url('ornebackground.jpg');
+  background-size: cover; /* Ảnh phủ toàn bộ nền */
+  background-repeat: no-repeat; /* Không lặp ảnh */
+  background-position: center; /* Căn giữa ảnh */
 }
 
 .container {
@@ -190,3 +194,4 @@ td img {
   border: 1px solid #ddd;
   cursor: pointer;
 }
+
