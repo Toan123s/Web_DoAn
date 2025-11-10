@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giỏ Hàng</title>
+    <link rel="stylesheet" href="./assets/css/cart.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./assets/icon/fontawesome-free-6.6.0-web/fontawesome-free-6.6.0-web/css/all.css">
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="logo">
+            <img src="./assets/images/logo.png" alt="logo" />
+        </div>
+
+        <div class="user-menu">
+            <a href="index.html" id="login-link"><i class="fas fa-user"></i> Tài khoản</a>
+            <div class="">
+                <a href="cart.html">
+                    <i class="fas fa-shopping-cart"></i> Giỏ hàng
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div class="QKhanh_content">
+        <div class="left-content">
+            <div class="text-size selected  product-in-cart">
+                <i class="fa-solid fa-cart-plus"></i>
+                <a id="load-again-cart" href="#">Sản phẩm trong giỏ</a>
+            </div>
+            <div class="text-size  orderHistory" onclick="displayOrderHistory(); noneOrderHistory()">
+                <i class="fa-solid fa-clock"></i>
+                <a href="#">Lịch sử mua hàng</a>
+            </div>
+
+
+
+            <div class="text-size back-mainPage">
+                <i class="fa-solid fa-reply"></i>
+                <a id="backIndexHtml" href="index.html">Tiếp tục mua sắm</a>
+            </div>
+        </div>
+
+        <div class="right-content">
+            <div class="items-in-cart ">
+                <div class="cart-section ">
+                    <h1>Giỏ Hàng</h1>
+
+                    <div class="product-table-header">
+                        <div><input id="select-all" type="checkbox" onclick="chonTatCa()"></div>
+                        <div class="text-size product-descript">Sản Phẩm</div>
+                        <div class="text-size other">Đơn Giá</div>
+                        <div class="text-size other">Số Lượng</div>
+                        <div class="text-size other">Số Tiền</div>
+                    </div>
+
+                    <!-- Sản phẩm trong đơn hàng -->
+                    <div class="orderItems-list">
+
+                    </div>
+                </div>
+
+                <!-- Nút xóa và thanh toán -->
+                <div class="footer-cart-actions ">
+                    <button class="text-size delete" onclick="xoaKhoiGioHang()">Xóa</button>
+                    <button class="text-size buy" onclick="muaHang(); getLocalStorageUserLogin()">Mua hàng</button>
+                </div>
+
+                <!-- chuyển qua giao diện thanh toán -->
+                <div class="checkout-section hidden">
+                    <h1>Thanh toán</h1>
+
+                    <div class="address-section">
+                        <div class="title-address">
+                            <i class="fa-solid fa-location-dot"></i>
+                            <h2>Địa Chỉ Nhận Hàng</h2>
+                        </div>
+
+                        <div class="delive-info">
+
+                        </div>
+                    </div>
+
+                    <div class="product-is-payed">
+                        <div class="product-table-header">
+                            <div class="text-size product-descript">Sản Phẩm</div>
+                            <div class="text-size other">Đơn Giá</div>
+                            <div class="text-size other">Số Lượng</div>
+                            <div class="text-size other">Số Tiền</div>
+                        </div>
+
+                        <div class="orderItems-list">
+
+                        </div>
+                    </div>
+
+                    <div class="payment-method">
+                        <div class="payment">
+                            <div class="text-size payment-title">Phương thức thanh toán</div>
+                            <div class="payment-option">
+                                <div>
+                                    <input type="radio" class="select-checkout" value="cash"
+                                        onclick="showPaymentForm('cash')">Thanh toán khi nhận hàng
+                                </div>
+                                <div>
+                                    <input type="radio" class="select-checkout" value="bank-transfer"
+                                        onclick="showPaymentForm('bank-transfer')">Chuyển khoản
+                                </div>
+                                <div>
+                                    <input type="radio" class="select-checkout" value="card"
+                                        onclick="showPaymentForm('card')">
+                                    Thanh toán qua thẻ
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Giao diện thanh toán khi nhận hàng -->
+                        <div class="cash-payment-form hidden">
+                            <h3>Vui lòng thanh toán khi nhận hàng!</h3>
+
+                        </div>
+                        <!-- Giao diện thanh toán qua banking -->
+                        <div class="bank-payment-form hidden">
+                            <h3>Thông tin chuyển khoản</h3><br>
+                            <div>Số tài khoản: <strong>123456789</strong></div><br>
+                            <div>Ngân hàng: <strong>Ngân hàng XYZ</strong></div><br>
+                            <div>Hướng dẫn: Vui lòng chuyển khoản vào số tài khoản trên và nhập Sđt</div>
+                        </div>
+
+                        <!-- Giao diện thanh toán qua thẻ -->
+                        <div class="card-payment-form hidden">
+                            <h3>Thông tin thẻ</h3><br>
+                            <div>
+                                <label for="card-number">Số thẻ:</label>
+                                <input type="text" id="card-number" placeholder="Nhập số thẻ" maxlength="16">
+                            </div>
+                            <div>
+                                <label for="card-expiry">Ngày hết hạn:</label>
+                                <input type="text" id="card-expiry" placeholder="MM/YY">
+                            </div>
+                            <div>
+                                <label for="card-cvv">CVV:</label>
+                                <input type="text" id="card-cvv" placeholder="CVV" maxlength="3">
+                            </div>
+                        </div>
+
+                        <div class="btn-payment-method">
+                            <button class=" back" onclick="quayLaiGioHang()">Quay lại</button>
+                            <button class=" checkout" onclick="hoanTatThanhToan()">Thanh toán</button>
+                        </div>
+
+                    </div>
+
+                </div>
+                <!-- Giao diện tóm tắt đơn hàng -->
+                <div class="order-summary">
+
+
+                </div>
+            </div>
+
+            <div class="history-in-cart hidden">
+                <h1>Lịch sử</h1>
+                <div style="border: 1.5px solid;">
+                    <div class="orderHistory-table-header">
+                        <div>Mã đơn hàng</div>
+                        <div class="product">Sản phẩm</div>
+                        <div>Tổng giá</div>
+                        <div>Trạng thái</div>
+                        <div>Chi tiết</div>
+                    </div>
+
+                    <div class="none-orderHistory-list ">
+                        <p>Chưa mua sản phẩm nào</p>
+                    </div>
+                    <div class="orderHistory-list"></div>
+                </div>
+            </div>
+
+
+            <div class="modal">
+                <div class="alert-cart hidden">
+                    <div class="message">Bạn chưa chọn sản phẩm nào để mua.</div>
+                    <button class="close-alert-btn" onclick="closeAlertNotSelect()">OK</button>
+                </div>
+
+                <div class="select-address hidden">
+                    <div class="title text-size">Địa Chỉ Của Tôi</div>
+
+                    <div class="address-list">
+                    </div>
+
+                    <div class="footer-modal-address">
+                        <button class="accept-address" onclick="closeSelectAddress(); getAddress2Deliver()">Xác
+                            nhận</button>
+                        <button class="reject-address" onclick="closeSelectAddress(); getAddressBefore()">Hủy</button>
+                    </div>
+                </div>
+
+                <div class="add-address hidden">
+                    <div class="title text-size">Địa Chỉ Mới</div>
+
+                    <div class="info-new-address">
+                        <input id="idName" type="text" disabled>
+                        <input id="idPhoneNumber" type="text" disabled>
+                        <input id="idAddress" type="text" placeholder="Địa chỉ">
+                        <div>
+                            <select id="provinces" onchange="getProvinceID()">
+
+                            </select>
+
+                            <select id="districts" onchange="getDistrictID()">
+                                <option value="0">Chọn Quận / Huyện</option>
+                            </select>
+
+                            <select id="wards">
+                                <option value="0">Chọn Phường / Xã</option>
+                            </select>
+                        </div>
+
+
+                    </div>
+
+                    <div class="footer-modal-address">
+                        <button class="accept-address" onclick="checkInfoNewAddress()">Hoàn thành</button>
+                        <button class="reject-address" onclick="closeAddNewAddress()">Trở lại</button>
+                    </div>
+                </div>
+
+                <div class="modal-order-detail hidden">
+
+                </div>
+
+                <div class="modal-none-login">
+                    <h2>Thông báo</h2>
+                    <p>Bạn chưa đăng nhập. Vui lòng đăng nhập để tiếp tục.</p>
+                    <a href="index.html" class="home-button">Quay về trang chủ</a>
+                </div>
+
+                <div class="modal-none-address hidden">
+                    <h2>Thông báo</h2>
+                    <p>Bạn chưa cập nhật địa chỉ. Vui lòng cập nhật để tiếp tục!</p>
+                    <a href="index.html" class="home-button">Quay về trang chủ</a>
+                </div>
+                
+            </div>
+        </div>
+
+        <script src="./js/cartJS.js"></script>
+    </div>
+
+
+</body>
+
+</html>

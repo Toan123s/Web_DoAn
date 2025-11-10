@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Admin</title>
+</head>
+<body>
+    <script>
+        // Khởi tạo dữ liệu test
+        localStorage.clear();
+        
+        // Tạo dữ liệu Admin
+        var Admin = [
+            {AdminID: '0', AdminFullName: 'Nguyễn Công Lâm', AdminName: 'Admin', AdminPassword: 'Admin', AdminSdt: '0376516504', AdminEmail: 'nguyenconglam2k5@gmail.com'}
+        ];
+        localStorage.setItem('ADMIN', JSON.stringify(Admin));
+        
+        // Tạo SaveLogin
+        var save = {saveL: '0', AdminID: ''};
+        localStorage.setItem('SaveLogin', JSON.stringify(save));
+        
+        alert('Dữ liệu test đã được khởi tạo. Chuyển đến trang Admin...');
+        window.location.href = 'admin.html';
+    </script>
+</body>
+</html>
