@@ -1142,18 +1142,24 @@ body {
 
 #chitiet_hd_thongke {
     display: none;
-    position: absolute;
+    position: fixed;
+    /* dùng fixed để căn giữa chính xác */
     left: 50%;
-    top: 60%;
-    translate: -50% -60%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    /* dùng transform thay translate cho tương thích */
     width: 600px;
     height: 550px;
-    z-index: 5;
+    z-index: 9999;
     background-color: white;
-    border: solid red;
-    padding: 10px;
-    overflow-y: scroll;
+    border: solid 2px #1565D6;
+    /* viền xanh đồng bộ */
+    padding: 20px;
+    border-radius: 10px;
+    overflow-y: auto;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
 }
+
 
 #chitiet_hd_thongke #head_title {
     color: #1565D6;
@@ -1192,12 +1198,10 @@ body {
 }
 
 #thoat_chitiet_hd_thongke {
-    position: fixed;
-    right: 10px;
+    position: absolute;
+    right: 15px;
     top: 10px;
-    width: 30px;
-    height: 30px;
-    font-size: 30px;
+    font-size: 28px;
     color: #1565D6;
     cursor: pointer;
 }
@@ -1878,7 +1882,7 @@ body {
     padding: 20px;
     background: #fff;
     border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     margin: 20px;
 }
 
@@ -1924,7 +1928,7 @@ body {
 .table-container {
     overflow-x: auto;
     border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .data-table {
@@ -1968,7 +1972,7 @@ body {
 .data-table tr:hover {
     background: #f8f9fa;
     transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .data-table tr:last-child td {
@@ -2102,7 +2106,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.7);
+    background: rgba(0, 0, 0, 0.7);
     z-index: 10000;
     justify-content: center;
     align-items: center;
@@ -2117,7 +2121,7 @@ body {
     max-width: 900px;
     max-height: 90vh;
     overflow-y: auto;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
     margin: auto;
 }
 
@@ -2215,7 +2219,7 @@ body {
     width: 100%;
     border-collapse: collapse;
     margin-top: 15px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     overflow: hidden;
 }
@@ -2242,7 +2246,7 @@ body {
     height: 60px;
     object-fit: cover;
     border-radius: 4px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .phieu-nhap-product-name {
@@ -2421,7 +2425,7 @@ body {
     border-radius: 10px;
     margin: 25px 0;
     border-left: 4px solid #1565D6;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .summary-row {
@@ -2504,20 +2508,20 @@ body {
         gap: 15px;
         align-items: stretch;
     }
-    
+
     .phieu-nhap-info-grid {
         grid-template-columns: 1fr;
     }
-    
+
     .roduct-item-nhap {
         grid-template-columns: 1fr;
         gap: 8px;
     }
-    
+
     .form-actions {
         flex-direction: column;
     }
-    
+
     .phieu-nhap-detail-content {
         width: 95%;
         margin: 20px;
@@ -2527,7 +2531,7 @@ body {
         flex-direction: column;
         align-items: stretch;
     }
-    
+
     .data-table .btn-sm {
         width: 100%;
         justify-content: center;
@@ -2536,8 +2540,15 @@ body {
 
 /* Hiệu ứng loading */
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .phieu-nhap-detail-content {
@@ -2562,6 +2573,7 @@ body {
 .phieu-nhap-detail-content::-webkit-scrollbar-thumb:hover {
     background: #0d47a1;
 }
+
 /*----------------------------------- PHẦN QUẢN LÝ SẢN PHẨM MỚI -----------------------------------*/
 .product-management-container {
     padding: 20px;
@@ -3282,19 +3294,19 @@ body {
         flex-direction: column;
         gap: 10px;
     }
-    
+
     #admin_left-menu {
         width: 100%;
         min-height: auto;
         display: flex;
         overflow-x: auto;
     }
-    
+
     #admin_left-menu li {
         flex-shrink: 0;
         min-width: 200px;
     }
-    
+
     #admin_content {
         min-height: auto;
     }
@@ -3304,15 +3316,15 @@ body {
     #admin_header {
         padding: 0 20px;
     }
-    
+
     #admin_account {
         right: 20px;
     }
-    
+
     #admin_workplace {
         padding: 10px;
     }
-    
+
     .content-section {
         padding: 15px;
         margin-bottom: 15px;
@@ -3362,7 +3374,8 @@ body {
 
 #chon_diachi select {
     flex: 1;
-    min-width: 0; /* Để flexbox hoạt động tốt */
+    min-width: 0;
+    /* Để flexbox hoạt động tốt */
 }
 
 #chon_diachi select:focus {
@@ -3373,8 +3386,10 @@ body {
 
 /* Đảm bảo form vừa với container */
 #form_add_infor {
-    width: 600px; /* Tăng width một chút */
-    height: auto; /* Để chiều cao tự động */
+    width: 600px;
+    /* Tăng width một chút */
+    height: auto;
+    /* Để chiều cao tự động */
     min-height: 500px;
     max-height: 90vh;
     overflow-y: auto;
@@ -3478,7 +3493,7 @@ body {
     background: #D4EDDA;
     color: #155724;
     border: 1px solid #C3E6CB;
-}   
+}
 
 /* Nút hoàn thành */
 .btn-complete {
@@ -3506,7 +3521,7 @@ body {
 .table-container {
     overflow-x: auto;
     border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     margin-top: 20px;
     background: white;
 }
@@ -3518,35 +3533,35 @@ body {
         margin: 10px;
         max-height: 95vh;
     }
-    
+
     .form-nhap-hang-body {
         grid-template-columns: 1fr;
     }
-    
+
     .product-item-nhap {
         grid-template-columns: 1fr;
         gap: 8px;
     }
-    
+
     .products-list-header {
         flex-direction: column;
         gap: 15px;
         align-items: stretch;
     }
-    
+
     .form-actions {
         flex-direction: column;
     }
-    
+
     .data-table {
         min-width: 600px;
     }
-    
+
     .data-table .text-center:last-child {
         flex-direction: column;
         align-items: stretch;
     }
-    
+
     .btn-action {
         width: 100%;
         margin: 2px 0;
@@ -3578,6 +3593,7 @@ body {
         opacity: 0;
         transform: translateY(-50px) scale(0.9);
     }
+
     to {
         opacity: 1;
         transform: translateY(0) scale(1);

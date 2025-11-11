@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 
 <head>
     <title>Trang Admin</title>
@@ -35,7 +35,7 @@
                     <i class="fa-solid fa-cart-plus"></i>
                     <span>Nhập hàng</span>
                 </li>
-                <li class="nav_left-menu" id="sanpham" onclick="rendersanpham()">
+                <li class="nav_left-menu" onclick="rendersanpham()">
                     <i class="fa-brands fa-product-hunt"></i>
                     <span>Sản phẩm</span>
                 </li>
@@ -45,140 +45,59 @@
                 </li>
             </ul>
 
-            <!-------------------------------------form đăng nhập trang admin--------------------------------------------->
+            <!-- Form đăng nhập -->
             <div id="form_login_Admin">
                 <div id="LoiChaoToiAd">Chào mừng đến trang Admin</div>
                 <div id="Yeucau">Vui lòng đăng nhập để tiếp tục</div>
-                <form action="login_Admin" id="login_Admin">
+                <form id="login_Admin">
                     <div class="login-input-group">
                         <label for="Admin_Name">Tên đăng nhập:</label>
-                        <input type="text" name="" id="Admin_Name" placeholder="Nhập tên đăng nhập">
+                        <input type="text" id="Admin_Name" placeholder="Nhập tên đăng nhập">
                     </div>
                     <div class="login-input-group">
                         <label for="Admin_Password">Mật khẩu:</label>
-                        <input type="password" name="" id="Admin_Password" placeholder="Nhập mật khẩu">
+                        <input type="password" id="Admin_Password" placeholder="Nhập mật khẩu">
                     </div>
-                    <input type="button" name="btnLA" id="login_Admin_bnt" value="Đăng nhập" onclick="Login_Admin()">
-                </form>
-            </div>
-            <!----------------------------------form thêm khách hàng---------------------------------->
-            <div id="form_add_infor">
-                <div id="thoat_form" onclick="HideForm_Add_User()"><i class="fa-solid fa-xmark"></i></div>
-                <form action="add_user" id="add_user">
-                    <div class="text_infor">Thông tin khách hàng:</div>
-                    <div id="infor_user">
-                        <div class="input-group">
-                            <label for="Hoten">Họ và tên:</label>
-                            <input type="text" name="ho_va_ten" id="Hoten" placeholder="Nhập họ và tên">
-                        </div>
-
-                        <div class="input-group">
-                            <label for="SDT">Số điện thoại:</label>
-                            <input type="text" name="SDT" id="SDT" placeholder="Nhập số điện thoại" maxlength="10">
-                        </div>
-
-                        <div class="input-group">
-                            <label>Địa chỉ:</label>
-                            <div id="chon_diachi" style="display: flex; gap: 10px; margin-top: 5px;">
-                                <select id="User_Tinh-tp" onchange="HienQuanUser()" style="flex: 1;">
-                                    <option value="0" selected>Tỉnh/thành phố</option>
-                                </select>
-                                <select id="User_Quan-huyen" onchange="HienPhuongXaUser()" style="flex: 1;">
-                                    <option value="0" selected>Quận/huyện</option>
-                                </select>
-                                <select id="User_Phuong-xa" style="flex: 1;">
-                                    <option value="0" selected>Phường/xã</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="input-group">
-                            <label for="Duong_soNha">Địa chỉ cụ thể:</label>
-                            <input type="text" name="Duong_soNha" id="Duong_soNha"
-                                placeholder="Số nhà, tên đường, thôn/xóm">
-                        </div>
-                    </div>
-
-                    <div class="text_infor">Thông tin tài khoản:</div>
-                    <div id="user_account">
-                        <div class="input-group">
-                            <label for="tenDangnhap">Tên đăng nhập:</label>
-                            <input type="text" name="tenDangnhap" id="tenDangnhap" placeholder="Nhập tên đăng nhập">
-                        </div>
-
-                        <div class="input-group">
-                            <label for="mkhau">Mật khẩu:</label>
-                            <input type="password" name="mkhau" id="mkhau" placeholder="Nhập mật khẩu">
-                        </div>
-
-                        <div class="input-group">
-                            <label for="re_mkhau">Nhập lại mật khẩu:</label>
-                            <input type="password" name="re_mkhau" id="re_mkhau" placeholder="Nhập lại mật khẩu">
-                        </div>
-                    </div>
-                    <input type="button" value="Thêm +" id="add_button" onclick="AddUser()">
+                    <input type="button" id="login_Admin_bnt" value="Đăng nhập" onclick="Login_Admin()">
                 </form>
             </div>
 
-            <!----------------------------bảng thông tin chi tiết người dùng-------------------------->
-            <div id="Show_user_Chitiet_va_Sua">
-                <div id="CSUser_thoat" onclick="exitCSUser()"><i class="fa-solid fa-xmark"></i></div>
-                <div id="CSUser_show">
-                </div>
-            </div>
+            <!-- Nội dung chính -->
+            <div id="admin_content"></div>
 
-            <!----------------------------------bảng chỉnh sửa người dùng-------------------------------->
-            <div id="Set_User">
-                <div id="Thoat_Set_User" onclick="Thoat_Set_User()"><i class="fa-solid fa-xmark"></i></div>
-                <div id="CSUser_show2">
-                    <form action="set_user_form" id="set_user_form">
-                        <div class="text_infor">Thông tin khách hàng:</div>
-                        <div id="Set_infor_user">
-                            <input type="text" name="ho_va_ten_set" id="Set_Hoten" placeholder="Họ và tên">
-                            <input type="text" name="SDT_set" id="Set_SDT" placeholder="Số điện thoại" maxlength="10">
-                            <label for="Set_Duong_soNha">Địa chỉ:</label>
-                            <input type="text" name="Duong_soNha_set" id="Set_Duong_soNha"
-                                placeholder="Tên đường/số nhà">
-
-                            <div id="Set_diachi_user">
-                                <select id="Set_User_Phuong-xa">
-                                    <option value="0" selected>Phường/xã</option>
-                                </select>
-                                <select id="Set_User_Quan-huyen" onchange="Set_HienPhuongXaUsert()">
-                                    <option value="0" selected>Quận/huyện</option>
-                                </select>
-                                <select id="Set_User_Tinh-tp" onchange="Set_HienQuanUser()">
-                                    <option value="0" selected>Tỉnh/thành phố</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="text_infor">Thông tin tài khoản:</div>
-                        <div id="Set_user_account">
-                            <input type="text" name="Set_tenDangnhap" id="Set_tenDangnhap" placeholder="Tên đăng nhập">
-                            <input type="text" name="Set_mkhau" id="Set_mkhau" placeholder="Mật khẩu">
-                            <input type="text" name="Set_re_mkhau" id="Set_re_mkhau" placeholder="Nhập lại mật khẩu">
-                        </div>
-                        <input type="button" value="Xác nhận" id="Set_button">
-                    </form>
-                </div>
-            </div>
-            <!-- ------------------------- Bảng các hoá đơn trong thống kê ----------------------------- -->
-            <div id="bang_hd_thong_ke"></div>
-            <!-- ------------------------- Bảng chi tiết hoá đơn trong thống kê ----------------------------- -->
-            <div id="chitiet_hd_thongke"></div>
-            <!-- form đơn hàng -->
-            <!-------------- form Lọc ------------->
-            <!-- Modal lọc -->
-            <div id="filterModal" class="modal">
+            <!-- Modal chi tiết sản phẩm -->
+            <div id="productDetailModal" class="product-detail-modal" style="display: none;">
                 <div class="modal-content">
-                    <span id="closeModal" class="close-btn">&times;</span>
+                    <span class="close-modal" onclick="closeProductDetail()">&times;</span>
+                    <h2 class="modal-title">CHI TIẾT SẢN PHẨM</h2>
+                    <div id="productDetailContent"></div>
+                </div>
+            </div>
+
+            <!-- Modal hóa đơn thống kê -->
+            <div id="bang_hd_thong_ke"></div>
+            <div id="nganThoat" onclick="thoat_danhsach_hd_thongke()"></div>
+
+            <!-- Modal chi tiết hóa đơn thống kê -->
+            <div id="chitiet_hd_thongke"></div>
+            <div id="nganThoat2" onclick="thoat_chitiet_hd_thongke()"></div>
+
+            <!-- Modal đơn hàng chi tiết -->
+            <div id="orderDetailModal" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <span class="close-btn" onclick="closeOrderDetail()">&times;</span>
+                    <div id="orderDetailContent"></div>
+                </div>
+            </div>
+
+            <!-- Modal lọc đơn hàng -->
+            <div id="filterModal" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <span class="close-btn" onclick="closeFilterModal()">&times;</span>
                     <div class="title-box">
                         <h3 class="filter-title">LỌC ĐƠN HÀNG</h3>
                     </div>
                     <div class="filter-options">
-
-                        <!-- Lọc theo ngày  -->
                         <div class="filter-row">
                             <div class="filter-item">
                                 <label for="fromDate">Từ ngày:</label>
@@ -189,272 +108,37 @@
                                 <input type="date" id="toDate">
                             </div>
                         </div>
-
-                        <!-- Lọc theo trạng thái -->
                         <div class="filter-row">
                             <div class="filter-item">
-                                <label for="statusFilter">Trạng thái đơn hàng:</label>
+                                <label for="statusFilter">Trạng thái:</label>
                                 <select id="statusFilter">
-                                    <option value="" disabled selected>Chọn trạng thái</option>
+                                    <option value="">Tất cả</option>
                                     <option value="0">Chưa xử lý</option>
                                     <option value="1">Đã xử lý</option>
                                     <option value="2">Đã giao</option>
                                     <option value="3">Đã hủy</option>
-                                    <option value="">Tất cả</option>
                                 </select>
                             </div>
-
-                            <!-- Lọc theo địa chỉ -->
                             <div class="filter-item">
                                 <label for="provinces">Tỉnh/Thành:</label>
-                                <select id="provinces" onclick="getProvinceID()">
+                                <select id="provinces" onchange="getProvinceID()">
                                     <option value="">Chọn tỉnh/thành</option>
-
-
                                 </select>
                             </div>
-
                             <div class="filter-item">
                                 <label for="districts">Quận/Huyện:</label>
-                                <select id="districts" onclick="getDistrictID()">
+                                <select id="districts" onchange="getDistrictID()">
                                     <option value="">Chọn quận/huyện</option>
-                                    <!-- Các quận sẽ được điền động -->
                                 </select>
                             </div>
-
                             <div class="filter-item">
                                 <label for="wards">Phường/Xã:</label>
                                 <select id="wards">
                                     <option value="">Chọn phường/xã</option>
-                                    <!-- Các phường sẽ được điền động -->
                                 </select>
                             </div>
                         </div>
-
-                        <!-- Xác nhận lọc -->
-                        <button id="confirmFilter" class="confirm-btn">Xác nhận</button>
-                    </div>
-                </div>
-            </div>
-
-
-
-
-            <!------------- form xem chi tiết ---------------->
-            <div id="orderDetailModal" class="modal">
-                <div class="modal-content">
-                    <span id="closeDetailModal" class="close-btn">&times;</span>
-                    <div id="orderDetailContent"> </div>
-                </div>
-            </div>
-
-            <div id="admin_content"></div>
-            <div class="themsanpham">
-                <!-- <div class="chuasanpham"><img class="anhsanpham"src="./assets/images/sanpham1.webp" alt=""><div class="tensanpham">tôi thấy hoa vàng trên cỏ xanh</div><div class="suasanpham"><i class="fa-solid fa-gear"></i></div><div class="xoasanpham"><i class="fa-solid fa-xmark"></i></div></div>
-                    <div class="chuasanpham"><img class="anhsanpham"src="./assets/images/sanpham1.webp" alt=""><div class="tensanpham">tôi thấy hoa vàng trên cỏ xanh</div><div class="suasanpham"><i class="fa-solid fa-gear"></i></div><div class="xoasanpham"><i class="fa-solid fa-xmark"></i></div></div> -->
-
-            </div>
-            <div class="themsuaxoa">
-                <h1 class="a111">thêm sản phẩm mới </h1>
-                <h1 class="a222">chỉnh sửa sản phẩm</h1>
-                <div>
-                    <div class="themmoi anh1">
-
-                        <input type="file" id="imageFile">
-                    </div>
-                    <img id="imagePreview" src="" alt="Xem trước ảnh">
-                    <input class="themmoi ten1" type="text" id="bookName" placeholder="Tên sản phẩm">
-                    <input class="themmoi gia1" type="text" id="bookPrice" placeholder="Giá">
-                    <select class="themmoi loai1" name="thể loại" id="bookCategory">
-                        <option value="thieunhi">Thiếu Nhi</option>
-                        <option value="tinhcam">Tình Cảm</option>
-                        <option value="chualanh">Chữa Lành</option>
-                        <option value="kynangsong">Kỹ Năng Sống</option>
-                        <option value="lichsu">Lịch Sử</option>
-                    </select>
-                    <button class="butbam" id="addProductButton">Hoàn Thành</button>
-                    <i class="fa-solid fa-xmark thoatthem" onclick="outra1()"></i>
-                </div>
-            </div>
-
-            <!-- Modal chi tiết phiếu nhập -->
-            <div id="phieuNhapDetailModal" class="phieu-nhap-detail-modal">
-                <div class="phieu-nhap-detail-content">
-                    <div class="phieu-nhap-detail-header">
-                        <h2 class="phieu-nhap-detail-title">CHI TIẾT PHIẾU NHẬP</h2>
-                        <button class="phieu-nhap-detail-close">&times;</button>
-                    </div>
-                    <div class="phieu-nhap-detail-body">
-                        <div class="phieu-nhap-info-section">
-                            <h3 class="phieu-nhap-section-title">
-                                <i class="fa-solid fa-info-circle"></i> Thông tin phiếu nhập
-                            </h3>
-                            <div class="phieu-nhap-info-grid">
-                                <div class="phieu-nhap-info-item">
-                                    <span class="phieu-nhap-info-label">Mã PN:</span>
-                                    <span class="phieu-nhap-info-value" id="detail-ma-pn">PN001</span>
-                                </div>
-                                <div class="phieu-nhap-info-item">
-                                    <span class="phieu-nhap-info-label">Ngày tạo:</span>
-                                    <span class="phieu-nhap-info-value" id="detail-ngay-tao">20/11/2024</span>
-                                </div>
-                                <div class="phieu-nhap-info-item">
-                                    <span class="phieu-nhap-info-label">Nhà cung cấp:</span>
-                                    <span class="phieu-nhap-info-value" id="detail-nha-cung-cap">Không có</span>
-                                </div>
-                                <div class="phieu-nhap-info-item">
-                                    <span class="phieu-nhap-info-label">Tổng số lượng:</span>
-                                    <span class="phieu-nhap-info-value" id="detail-tong-sl">80</span>
-                                </div>
-                                <div class="phieu-nhap-info-item">
-                                    <span class="phieu-nhap-info-label">Tổng tiền:</span>
-                                    <span class="phieu-nhap-info-value" id="detail-tong-tien">4.000.000 ₫</span>
-                                </div>
-                                <div class="phieu-nhap-info-item">
-                                    <span class="phieu-nhap-info-label">Trạng thái:</span>
-                                    <span class="phieu-nhap-info-value">
-                                        <span class="status-badge status-completed">HOÀN THÀNH</span>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="phieu-nhap-info-section">
-                            <h3 class="phieu-nhap-section-title">
-                                <i class="fa-solid fa-boxes"></i> Danh sách sản phẩm
-                            </h3>
-                            <table class="phieu-nhap-products-table">
-                                <thead>
-                                    <tr>
-                                        <th>STT</th>
-                                        <th>Sản phẩm</th>
-                                        <th>Số lượng</th>
-                                        <th>Đơn giá</th>
-                                        <th>Thành tiền</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="detail-ds-san-pham">
-                                    <!-- Danh sách sản phẩm sẽ được điền bằng JavaScript -->
-                                    <tr>
-                                        <td>1</td>
-                                        <td>
-                                            <div style="display: flex; align-items: center; gap: 10px;">
-                                                <img src="./assets/images/sanpham1.webp" alt="Sản phẩm"
-                                                    class="phieu-nhap-product-image">
-                                                <span class="phieu-nhap-product-name">Tôi thấy hoa vàng trên cỏ
-                                                    xanh</span>
-                                            </div>
-                                        </td>
-                                        <td class="phieu-nhap-product-quantity">20</td>
-                                        <td class="phieu-nhap-product-price">50.000 ₫</td>
-                                        <td class="phieu-nhap-product-total">1.000.000 ₫</td>
-                                    </tr>
-                                    <tr>
-                                        <td>2</td>
-                                        <td>
-                                            <div style="display: flex; align-items: center; gap: 10px;">
-                                                <img src="./assets/images/sanpham1.webp" alt="Sản phẩm"
-                                                    class="phieu-nhap-product-image">
-                                                <span class="phieu-nhap-product-name">Mắt biếc</span>
-                                            </div>
-                                        </td>
-                                        <td class="phieu-nhap-product-quantity">15</td>
-                                        <td class="phieu-nhap-product-price">60.000 ₫</td>
-                                        <td class="phieu-nhap-product-total">900.000 ₫</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <div class="phieu-nhap-summary">
-                            <div class="phieu-nhap-summary-row">
-                                <span class="phieu-nhap-summary-label">Tổng cộng:</span>
-                                <span class="phieu-nhap-summary-value">1.900.000 ₫</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Modal thêm phiếu nhập -->
-            <div id="themPhieuNhapModal" class="phieu-nhap-detail-modal">
-                <div class="phieu-nhap-detail-content" style="max-width: 900px;">
-                    <div class="phieu-nhap-detail-header">
-                        <h2 class="phieu-nhap-detail-title">THÊM PHIẾU NHẬP MỚI</h2>
-                        <button class="phieu-nhap-detail-close">&times;</button>
-                    </div>
-                    <div class="phieu-nhap-detail-body">
-                        <form id="formThemPhieuNhap">
-                            <div class="form-nhap-hang-body">
-                                <div class="form-group">
-                                    <label for="maPhieuNhap">Mã phiếu nhập:</label>
-                                    <input type="text" id="maPhieuNhap" placeholder="Tự động tạo" disabled>
-                                </div>
-                                <div class="form-group">
-                                    <label for="ngayNhap">Ngày nhập:</label>
-                                    <input type="date" id="ngayNhap">
-                                </div>
-                                <div class="form-group">
-                                    <label for="nhaCungCap">Nhà cung cấp:</label>
-                                    <select id="nhaCungCap">
-                                        <option value="">Chọn nhà cung cấp</option>
-                                        <option value="ncc1">Nhà sách Kim Đồng</option>
-                                        <option value="ncc2">Công ty Văn hóa Trí tuệ</option>
-                                        <option value="ncc3">NXB Trẻ</option>
-                                    </select>
-                                </div>
-                                <div class="form-group full-width">
-                                    <label for="ghiChu">Ghi chú:</label>
-                                    <textarea id="ghiChu" rows="3" placeholder="Nhập ghi chú (nếu có)"></textarea>
-                                </div>
-                            </div>
-
-                            <div class="products-list-header">
-                                <h3 class="products-list-title">Danh sách sản phẩm nhập</h3>
-                                <button type="button" class="btn-add-product-item" onclick="themSanPhamNhap()">
-                                    <i class="fa-solid fa-plus"></i> Thêm sản phẩm
-                                </button>
-                            </div>
-
-                            <div id="danhSachSanPhamNhap">
-                                <!-- Các sản phẩm sẽ được thêm vào đây -->
-                                <div class="product-item-nhap">
-                                    <select onchange="capNhatGiaSanPham(this)">
-                                        <option value="">Chọn sản phẩm</option>
-                                        <option value="sp1" data-price="50000">Tôi thấy hoa vàng trên cỏ xanh</option>
-                                        <option value="sp2" data-price="60000">Mắt biếc</option>
-                                        <option value="sp3" data-price="45000">Cô gái đến từ hôm qua</option>
-                                    </select>
-                                    <input type="number" placeholder="Số lượng" min="1" value="1"
-                                        onchange="tinhThanhTien(this)">
-                                    <input type="text" placeholder="Đơn giá" readonly>
-                                    <input type="text" placeholder="Thành tiền" readonly>
-                                    <button type="button" class="btn-remove-product" onclick="xoaSanPhamNhap(this)">
-                                        <i class="fa-solid fa-trash"></i>
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div class="nhap-hang-summary">
-                                <div class="summary-row">
-                                    <span class="summary-label">Tổng số lượng:</span>
-                                    <span class="summary-value" id="tongSoLuong">0</span>
-                                </div>
-                                <div class="summary-row">
-                                    <span class="summary-label">Tổng tiền:</span>
-                                    <span class="summary-value" id="tongTien">0 ₫</span>
-                                </div>
-                            </div>
-
-                            <div class="form-actions">
-                                <button type="button" class="btn-cancel-form" onclick="dongModalThemPhieuNhap()">
-                                    <i class="fa-solid fa-times"></i> Hủy
-                                </button>
-                                <button type="submit" class="btn-submit">
-                                    <i class="fa-solid fa-save"></i> Lưu phiếu nhập
-                                </button>
-                            </div>
-                        </form>
+                        <button class="confirm-btn" onclick="filterOrders()">Xác nhận</button>
                     </div>
                 </div>
             </div>

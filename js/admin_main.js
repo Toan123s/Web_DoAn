@@ -6,6 +6,7 @@ window.onload = function () {
     KhoiTaoDonHang();
     KhoiTaoCacDiaChi();
     KhoiTaoAdmin();
+    KhoiTaoNhapHang();
 
     Login_Admin();
     initFilterModal();
@@ -679,7 +680,7 @@ function Show_doanh_thu() {
     // Sửa phần này - đưa 2 select vào cùng một dòng
     s += '<div id="control_doanh_thu" style="display: flex; gap: 20px; align-items: center; margin-bottom: 15px;">';
     s += '<div id="control_doanh_thu_2">';
-    s += '<select name="" id="chon_Loai_TK" onchange = "control_show_tk_1()"> <option value="0">Thống kê theo khách hàng</option> <option value="1">Thống kê theo mặt hàng</option> </select>';
+    s += '<select name="" id="chon_Loai_TK" onchange = "control_show_tk_1()"> <option value="0">Thống kê theo khách hàng</option> <option value="1">Thống kê theo mặt hàng</option> <option value="2">Thống kê theo loại sản phẩm</option> </select>';
     s += '</div>';
     s += '<div id="control_doanh_thu_1">';
     s += ' <select name="" id="chon_ThoiGian" onchange="show_control_doanh_thu(); control_show_tk_3();"> <option value="0">Từ trước tới nay</option> <option value="1">Trong khoảng thời gian</option> </select>';
@@ -693,6 +694,7 @@ function Show_doanh_thu() {
     show.innerHTML = s;
     cap_nhat_data_doanh_thu();
     cap_nhat_data_doanh_thu_2();
+    cap_nhat_data_doanh_thu_3(); // Thêm cập nhật dữ liệu loại sản phẩm
     ShowKQ_Khach_hang();
 }
 
@@ -747,37 +749,63 @@ function ds_sp_trong_hd(orderID) {
 }
 
 function hien_danhsach_hd_theo_khach(idUser) {
-    document.getElementById('bang_hd_thong_ke').style.display = 'block'
+    document.getElementById('bang_hd_thong_ke').style.display = 'block';
     document.getElementById('nganThoat').style.display = 'block';
+
     var control1 = document.getElementById('chon_ThoiGian');
     var data;
     if (control1.value === '0') {
-        data = JSON.parse(localStorage.getItem('Rev_Khach')); //Từ trước đến nay
-    }
-    else {
-        data = JSON.parse(localStorage.getItem('dataShow_khach')); //Theo ngày
+        data = JSON.parse(localStorage.getItem('Rev_Khach'));
+    } else {
+        data = JSON.parse(localStorage.getItem('dataShow_khach'));
     }
 
     if (data === null) {
+        var s = '<button id="thoat_bang_hd_thong_ke" onclick="thoat_danhsach_hd_thongke()" style="position: absolute; top: 10px; right: 10px; background: #dc3545; color: white; border: none; border-radius: 5px; padding: 5px 10px; cursor: pointer;"><i class="fa-solid fa-xmark"></i> Đóng</button>';
+        s += '<p>Không có dữ liệu</p>';
+        document.getElementById('bang_hd_thong_ke').innerHTML = s;
         return;
     }
-    var s = ' <button id="thoat_bang_hd_thong_ke" onclick="thoat_danhsach_hd_thongke()"><i class="fa-solid fa-xmark"></i></button>';
-    s += '<p class="infor1">Các hoá đơn của khách hàng: ' + Ten_khach(idUser) + '</p>';
-    s += '<p class="infor1">Mã khách hàng:' + idUser + '</p>';
-    s += '<table> <th>Mã hoá đơn</th> <th>Các sản phẩm</th> <th>Ngày thanh toán</th> <th>Tổng giá trị hoá đơn</th><th>Chi tiết hoá đơn</th></tr>';
+
+    var s = '<button id="thoat_bang_hd_thong_ke" onclick="thoat_danhsach_hd_thongke()" style="position: absolute; top: 10px; right: 10px; background: #dc3545; color: white; border: none; border-radius: 5px; padding: 5px 10px; cursor: pointer;"><i class="fa-solid fa-xmark"></i> Đóng</button>';
+    s += '<h3 style="color: #1565D6; margin-bottom: 20px; text-align: center;">Hóa đơn của khách hàng</h3>';
+    s += '<p style="margin-bottom: 15px;"><strong>Khách hàng:</strong> ' + Ten_khach(idUser) + '</p>';
+    s += '<p style="margin-bottom: 20px;"><strong>Mã KH:</strong> ' + idUser + '</p>';
+
+    s += '<div style="overflow-x: auto;">';
+    s += '<table style="width: 100%; border-collapse: collapse;">';
+    s += '<thead><tr style="background: #1565D6; color: white;">';
+    s += '<th style="padding: 10px; border: 1px solid #ddd;">Mã HĐ</th>';
+    s += '<th style="padding: 10px; border: 1px solid #ddd;">Sản phẩm</th>';
+    s += '<th style="padding: 10px; border: 1px solid #ddd;">Ngày</th>';
+    s += '<th style="padding: 10px; border: 1px solid #ddd;">Tổng tiền</th>';
+    s += '<th style="padding: 10px; border: 1px solid #ddd;">Chi tiết</th>';
+    s += '</tr></thead><tbody>';
+
+    var found = false;
     for (var i = 0; i < data.length; i++) {
         if (idUser === data[i].UserID) {
             for (var k = 0; k < data[i].orders.length; k++) {
-                s += '<tr> <td>' + data[i].orders[k].OrderID + '</td>';
-                s += '<td>' + ds_sp_trong_hd(data[i].orders[k].OrderID) + '</td>';
-                s += '<td>' + data[i].orders[k].day_Order + '</td>';
-                s += '<td>' + Hien_gia_tien(data[i].orders[k].gia_tri) + '</td>';
-                s += '<td> <button class="bnt_xem_hdtk" onclick = "hien_chitiet_hd_thongke(' + data[i].orders[k].OrderID + ')">Xem</button>  </td>';
+                found = true;
+                s += '<tr>';
+                s += '<td style="padding: 10px; border: 1px solid #ddd; text-align: center;">' + data[i].orders[k].OrderID + '</td>';
+                s += '<td style="padding: 10px; border: 1px solid #ddd;">' + ds_sp_trong_hd(data[i].orders[k].OrderID) + '</td>';
+                s += '<td style="padding: 10px; border: 1px solid #ddd; text-align: center;">' + data[i].orders[k].day_Order + '</td>';
+                s += '<td style="padding: 10px; border: 1px solid #ddd; text-align: right; color: #e74c3c; font-weight: bold;">' + Hien_gia_tien(data[i].orders[k].gia_tri) + '</td>';
+                s += '<td style="padding: 10px; border: 1px solid #ddd; text-align: center;">';
+                s += '<button class="bnt_xem_hdtk" onclick="hien_chitiet_hd_thongke(' + data[i].orders[k].OrderID + ')" style="background: #1565D6; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">Xem</button>';
+                s += '</td>';
                 s += '</tr>';
             }
         }
     }
-    document.getElementById('bang_hd_thong_ke').innerHTML = s + '</table>';
+
+    if (!found) {
+        s += '<tr><td colspan="5" style="padding: 20px; text-align: center;">Không có hóa đơn nào</td></tr>';
+    }
+
+    s += '</tbody></table></div>';
+    document.getElementById('bang_hd_thong_ke').innerHTML = s;
 }
 
 function thoat_chitiet_hd_thongke() {
@@ -788,34 +816,62 @@ function thoat_chitiet_hd_thongke() {
 function hien_chitiet_hd_thongke(orderID) {
     document.getElementById('chitiet_hd_thongke').style.display = 'block';
     document.getElementById('nganThoat2').style.display = 'block';
-    var s = '<div id="thoat_chitiet_hd_thongke" onclick="thoat_chitiet_hd_thongke()"><i class="fa-solid fa-xmark"></i></div>';
-    s += '<p id="head_title">Thông tin đơn hàng</p>';
-    s += '<p>Mã Đơn hàng: ' + orderID + '</p>';
+
+    var s = '<div style="position: absolute; top: 10px; right: 10px;">';
+    s += '<button onclick="thoat_chitiet_hd_thongke()" style="background: #dc3545; color: white; border: none; border-radius: 5px; padding: 5px 10px; cursor: pointer;">';
+    s += '<i class="fa-solid fa-xmark"></i> Đóng';
+    s += '</button></div>';
+
+    s += '<h3 style="color: #1565D6; margin-bottom: 20px; text-align: center;">Thông tin đơn hàng</h3>';
+
     var data = JSON.parse(localStorage.getItem('orderList'));
     if (data === null) {
-        document.getElementById('chitiet_hd_thongke').innerHTML = '<p> Không có dữ liệu đơn hàng </p>';
+        document.getElementById('chitiet_hd_thongke').innerHTML = s + '<p>Không có dữ liệu đơn hàng</p>';
         return;
     }
+
+    var found = false;
     for (var i = 0; i < data.length; i++) {
         if (orderID === data[i].OrderID) {
-            s += '<p>Tổng giá trị đơn hàng: ' + Hien_gia_tien(data[i].TotalOrderItems) + '</p>';
-            s += '<p class="title_infor">Thông tin khách hàng</p>';
-            s += '<p>Mã khách hàng: ' + data[i].UserID + '</p>';
-            s += '<p>Tên khách hàng: ' + data[i].FullName + '</p>';
-            s += '<p>Số điện thoại: ' + data[i].Sdt + '</p>';
-            s += '<p>Địa chỉ nhận hàng: ' + data[i].Address + '</p>';
-            s += '<p>Phương thức thanh toán: ' + data[i].PaymentMethod + '</p>'
-            s += '<p class="title_infor">Các sản phẩm:</p>';
-            s += '<div id="ds_sp" > ';
+            found = true;
+            s += '<div style="margin-bottom: 15px;">';
+            s += '<p><strong>Mã đơn hàng:</strong> ' + data[i].OrderID + '</p>';
+            s += '<p><strong>Tổng giá trị:</strong> ' + Hien_gia_tien(data[i].TotalOrderItems) + '</p>';
+            s += '</div>';
+
+            s += '<div style="background: #f8f9fa; padding: 15px; border-radius: 5px; margin-bottom: 15px;">';
+            s += '<h4 style="color: #1565D6; margin-bottom: 10px;">Thông tin khách hàng</h4>';
+            s += '<p><strong>Mã KH:</strong> ' + data[i].UserID + '</p>';
+            s += '<p><strong>Tên KH:</strong> ' + data[i].FullName + '</p>';
+            s += '<p><strong>SĐT:</strong> ' + data[i].Sdt + '</p>';
+            s += '<p><strong>Địa chỉ:</strong> ' + data[i].Address + '</p>';
+            s += '<p><strong>Phương thức TT:</strong> ' + data[i].PaymentMethod + '</p>';
+            s += '</div>';
+
+            s += '<div>';
+            s += '<h4 style="color: #1565D6; margin-bottom: 10px;">Danh sách sản phẩm</h4>';
+            s += '<div style="display: grid; gap: 10px;">';
+
             for (var k = 0; k < data[i].OrderItems.length; k++) {
-                s += '<div class="ds_sp_items1">';
-                s += '<img src="' + data[i].OrderItems[k].img + '" alt="" class="ds_sp_items1_img">';
-                s += '<p>' + data[i].OrderItems[k].name + ' x' + data[i].OrderItems[k].quantity + '</p>';
-                s += '<p>Tổng giá: ' + Hien_gia_tien(data[i].OrderItems[k].price) + '</p> </div>';
+                s += '<div style="display: flex; align-items: center; gap: 15px; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">';
+                s += '<img src="' + data[i].OrderItems[k].img + '" alt="" style="width: 60px; height: 80px; object-fit: cover; border-radius: 5px;">';
+                s += '<div style="flex: 1;">';
+                s += '<p style="margin: 0; font-weight: bold;">' + data[i].OrderItems[k].name + '</p>';
+                s += '<p style="margin: 5px 0; color: #666;">Số lượng: ' + data[i].OrderItems[k].quantity + '</p>';
+                s += '<p style="margin: 0; color: #e74c3c; font-weight: bold;">' + Hien_gia_tien(data[i].OrderItems[k].totalPrice1Item) + '</p>';
+                s += '</div>';
+                s += '</div>';
             }
             s += '</div>';
+            s += '</div>';
+            break;
         }
     }
+
+    if (!found) {
+        s += '<p>Không tìm thấy thông tin đơn hàng</p>';
+    }
+
     document.getElementById('chitiet_hd_thongke').innerHTML = s;
 }
 
@@ -1055,96 +1111,566 @@ function show_KQ_Product() {
 }
 
 function Hien_ds_hd_theo_product(productId) {
-    document.getElementById('bang_hd_thong_ke').style.display = 'block'
+    document.getElementById('bang_hd_thong_ke').style.display = 'block';
     document.getElementById('nganThoat').style.display = 'block';
+
     var control1 = document.getElementById('chon_ThoiGian');
     var data;
     if (control1.value === '0') {
-        data = JSON.parse(localStorage.getItem('Rev_Product')); //Từ trước đến nay
-    }
-    else {
-        data = JSON.parse(localStorage.getItem('dataShow_product')); //Theo ngày
+        data = JSON.parse(localStorage.getItem('Rev_Product'));
+    } else {
+        data = JSON.parse(localStorage.getItem('dataShow_Product'));
     }
 
     if (data === null) {
+        var s = '<button id="thoat_bang_hd_thong_ke" onclick="thoat_danhsach_hd_thongke()" style="position: absolute; top: 10px; right: 10px; background: #dc3545; color: white; border: none; border-radius: 5px; padding: 5px 10px; cursor: pointer;"><i class="fa-solid fa-xmark"></i> Đóng</button>';
+        s += '<p>Không có dữ liệu</p>';
+        document.getElementById('bang_hd_thong_ke').innerHTML = s;
         return;
     }
-    var s = ' <button id="thoat_bang_hd_thong_ke" onclick="thoat_danhsach_hd_thongke()"><i class="fa-solid fa-xmark"></i></button>';
-    s += '<p class="infor1">Các hoá đơn có mặt hàng: ' + Hien_ten_sp_theo_id(productId) + '</p>';
-    s += '<p class="infor1">Mã sản phẩm:' + productId + '</p>';
-    s += '<table> <th>Mã hoá đơn</th> <th>Các sản phẩm</th> <th>Ngày thanh toán</th> <th>Tổng giá trị hoá đơn</th><th>Chi tiết hoá đơn</th></tr>';
+
+    var s = '<button id="thoat_bang_hd_thong_ke" onclick="thoat_danhsach_hd_thongke()" style="position: absolute; top: 10px; right: 10px; background: #dc3545; color: white; border: none; border-radius: 5px; padding: 5px 10px; cursor: pointer;"><i class="fa-solid fa-xmark"></i> Đóng</button>';
+    s += '<h3 style="color: #1565D6; margin-bottom: 20px; text-align: center;">Hóa đơn có sản phẩm</h3>';
+    s += '<p style="margin-bottom: 15px;"><strong>Sản phẩm:</strong> ' + Hien_ten_sp_theo_id(productId) + '</p>';
+    s += '<p style="margin-bottom: 20px;"><strong>Mã SP:</strong> ' + productId + '</p>';
+
+    s += '<div style="overflow-x: auto;">';
+    s += '<table style="width: 100%; border-collapse: collapse;">';
+    s += '<thead><tr style="background: #1565D6; color: white;">';
+    s += '<th style="padding: 10px; border: 1px solid #ddd;">Mã HĐ</th>';
+    s += '<th style="padding: 10px; border: 1px solid #ddd;">Sản phẩm</th>';
+    s += '<th style="padding: 10px; border: 1px solid #ddd;">Ngày</th>';
+    s += '<th style="padding: 10px; border: 1px solid #ddd;">Tổng tiền</th>';
+    s += '<th style="padding: 10px; border: 1px solid #ddd;">Chi tiết</th>';
+    s += '</tr></thead><tbody>';
+
+    var found = false;
     for (var i = 0; i < data.length; i++) {
         if (productId === data[i].productId) {
             for (var k = 0; k < data[i].orders.length; k++) {
-                s += '<tr> <td>' + data[i].orders[k].orderID + '</td>';
-                s += '<td>' + ds_sp_trong_hd(data[i].orders[k].orderID) + '</td>';
-                s += '<td>' + data[i].orders[k].day_Order + '</td>';
-                s += '<td>' + Hien_gia_tien(data[i].orders[k].totalPrice) + '</td>';
-                s += '<td> <button class="bnt_xem_hdtk" onclick = "hien_chitiet_hd_thongke(' + data[i].orders[k].orderID + ')">Xem</button>  </td>';
+                found = true;
+                s += '<tr>';
+                s += '<td style="padding: 10px; border: 1px solid #ddd; text-align: center;">' + data[i].orders[k].orderID + '</td>';
+                s += '<td style="padding: 10px; border: 1px solid #ddd;">' + ds_sp_trong_hd(data[i].orders[k].orderID) + '</td>';
+                s += '<td style="padding: 10px; border: 1px solid #ddd; text-align: center;">' + data[i].orders[k].day_Order + '</td>';
+                s += '<td style="padding: 10px; border: 1px solid #ddd; text-align: right; color: #e74c3c; font-weight: bold;">' + Hien_gia_tien(data[i].orders[k].totalPrice) + '</td>';
+                s += '<td style="padding: 10px; border: 1px solid #ddd; text-align: center;">';
+                s += '<button class="bnt_xem_hdtk" onclick="hien_chitiet_hd_thongke(' + data[i].orders[k].orderID + ')" style="background: #1565D6; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">Xem</button>';
+                s += '</td>';
                 s += '</tr>';
             }
         }
     }
-    document.getElementById('bang_hd_thong_ke').innerHTML = s + '</table>';
+
+    if (!found) {
+        s += '<tr><td colspan="5" style="padding: 20px; text-align: center;">Không có hóa đơn nào</td></tr>';
+    }
+
+    s += '</tbody></table></div>';
+    document.getElementById('bang_hd_thong_ke').innerHTML = s;
 }
 
-function control_show_tk_1() {
-    var control = document.getElementById('chon_Loai_TK').value;
-    var control2 = document.getElementById('chon_ThoiGian').value;
-    if (control === '0') {
-        if (control2 === '0') {
-            ShowKQ_Khach_hang();
+const style = document.createElement('style');
+style.textContent = `
+    .bnt_ShowOrder {
+        background: #1565D6;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 3px;
+        cursor: pointer;
+        text-align: center;
+        border: none;
+    }
+    
+    .bnt_ShowOrder:hover {
+        background: #0d47a1;
+    }
+    
+    .bnt_xem_hdtk {
+        background: #28a745;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 3px;
+        cursor: pointer;
+    }
+    
+    .bnt_xem_hdtk:hover {
+        background: #218838;
+    }
+    
+    #bang_hd_thong_ke, #chitiet_hd_thongke {
+        min-width: 600px;
+        max-width: 90vw;
+    }
+    
+    .ds_sp_items1 {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        margin-bottom: 10px;
+    }
+    
+    .ds_sp_items1_img {
+        width: 60px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 5px;
+    }
+`;
+document.head.appendChild(style);
+
+
+// --------------------------------------------------------------THỐNG KÊ THEO LOẠI SẢN PHẨM--------------------------------------------------
+
+// Hàm cập nhật dữ liệu doanh thu theo loại sản phẩm
+function cap_nhat_data_doanh_thu_3() {
+    var orderList = JSON.parse(localStorage.getItem('orderList'));
+    if (orderList === null) {
+        return;
+    }
+
+    var categoryMap = {};
+
+    orderList.forEach(order => {
+        if (order.Status === '2') {
+            order.OrderItems.forEach(item => {
+                var category = item.category;
+                if (!categoryMap[category]) {
+                    categoryMap[category] = [];
+                }
+                categoryMap[category].push({
+                    orderID: order.OrderID,
+                    day_Order: order.OrderDate,
+                    totalPrice: item.totalPrice1Item,
+                    quantity: item.quantity,
+                    productId: item.productId,
+                    productName: item.name
+                });
+            });
         }
-        else {
-            capnhat_DT_khach_theo_ngay_va_in();
+    });
+
+    var result = [];
+    for (var category in categoryMap) {
+        if (categoryMap.hasOwnProperty(category)) {
+            result.push({
+                category: category,
+                orders: categoryMap[category]
+            });
         }
+    }
+
+    localStorage.setItem('Rev_Category', JSON.stringify(result));
+    Sort_Rev_Category();
+}
+
+// Sắp xếp loại sản phẩm theo doanh thu giảm dần
+function Sort_Rev_Category() {
+    var data = JSON.parse(localStorage.getItem('Rev_Category'));
+    if (data === null) {
+        return;
+    }
+    data.sort(function (a, b) {
+        return tong_doanh_thu_loai_san_pham(b.category) - tong_doanh_thu_loai_san_pham(a.category);
+    });
+    localStorage.setItem('Rev_Category', JSON.stringify(data));
+}
+
+// Sắp xếp dữ liệu loại sản phẩm in ra theo ngày
+function Sort_Rev_Show_Category() {
+    var data = JSON.parse(localStorage.getItem('dataShow_Category'));
+    if (data === null) {
+        return;
+    }
+    data.sort(function (a, b) {
+        return tong_doanh_thu_loai_san_pham(b.category) - tong_doanh_thu_loai_san_pham(a.category);
+    });
+    localStorage.setItem('dataShow_Category', JSON.stringify(data));
+}
+
+// Cập nhật dữ liệu loại sản phẩm theo ngày
+function cap_nhat_DT_loai_theo_ngay_va_in() {
+    var data = JSON.parse(localStorage.getItem('Rev_Category'));
+    if (data === null) {
+        return;
+    }
+    var startDate = document.getElementById('from_day');
+    var endDate = document.getElementById('to_day');
+    if (startDate.value === '') {
+        alert('Vui lòng nhập ngày bắt đầu thống kê !');
+        startDate.focus();
+        return;
+    }
+    if (endDate.value === '') {
+        alert('Vui lòng nhập ngày kết thúc thống kê !');
+        endDate.focus();
+        return;
+    }
+
+    var filteredData = [];
+
+    data.forEach(item => {
+        let filteredOrders = item.orders.filter(order => {
+            let date_chuyen_doi = chuyen_dinh_dang_ngay_thang(order.day_Order);
+            return date_chuyen_doi >= startDate.value && date_chuyen_doi <= endDate.value;
+        })
+
+        if (filteredOrders.length > 0) {
+            filteredData.push({
+                category: item.category,
+                orders: filteredOrders
+            });
+        }
+    });
+
+    localStorage.setItem('dataShow_Category', JSON.stringify(filteredData));
+    Sort_Rev_Show_Category();
+    show_KQ_Category();
+}
+
+// Tính tổng số lượng sản phẩm bán ra theo loại
+function tong_luong_sp_ban_ra_theo_loai(category) {
+    var a = document.getElementById('chon_ThoiGian');
+    var data;
+    if (a.value === '0') {
+        data = JSON.parse(localStorage.getItem('Rev_Category'));
     }
     else {
-        if (control2 === '0') {
-            show_KQ_Product();
-        }
-        else {
-            cap_nhat_DT_san_pham_theo_ngay_va_in();
+        data = JSON.parse(localStorage.getItem('dataShow_Category'))
+    }
+    if (data === null) {
+        return 0;
+    }
+    var total = 0;
+    for (var i = 0; i < data.length; i++) {
+        if (category === data[i].category) {
+            for (var k = 0; k < data[i].orders.length; k++) {
+                total += data[i].orders[k].quantity;
+            }
+            break;
         }
     }
-    return;
+    return total;
 }
 
-function control_show_tk_2() {
-    var control = document.getElementById('chon_Loai_TK').value;
-    if (control === '0') {
-        capnhat_DT_khach_theo_ngay_va_in();
+// Tính tổng doanh thu theo loại sản phẩm
+function tong_doanh_thu_loai_san_pham(category) {
+    var a = document.getElementById('chon_ThoiGian');
+    var data;
+    if (a.value === '0') {
+        data = JSON.parse(localStorage.getItem('Rev_Category'));
     }
     else {
-        cap_nhat_DT_san_pham_theo_ngay_va_in();
+        data = JSON.parse(localStorage.getItem('dataShow_Category'))
     }
-    return;
+    if (data === null) {
+        return 0;
+    }
+    var total = 0;
+    for (var i = 0; i < data.length; i++) {
+        if (category === data[i].category) {
+            for (var k = 0; k < data[i].orders.length; k++) {
+                total += data[i].orders[k].totalPrice;
+            }
+            break;
+        }
+    }
+    return total;
 }
 
-function control_show_tk_3() {
-    var control1 = document.getElementById('chon_Loai_TK').value;
-    var control2 = document.getElementById('chon_ThoiGian').value;
-    if (control1 === '0') {
-        if (control2 === '0') {
-            ShowKQ_Khach_hang();
-        }
-        else {
-            capnhat_DT_khach_theo_ngay_va_in();
-        }
+// Tính tổng doanh thu tất cả các loại
+function TongDoanhThu_theo_category() {
+    var a = document.getElementById('chon_ThoiGian');
+    var data;
+    if (a.value === '0') {
+        data = JSON.parse(localStorage.getItem('Rev_Category'));
     }
     else {
-        if (control2 === '0') {
-            show_KQ_Product();
-        }
-        else {
-            cap_nhat_DT_san_pham_theo_ngay_va_in();
-        }
+        data = JSON.parse(localStorage.getItem('dataShow_Category'))
     }
-    return;
+    if (data === null) {
+        return 0;
+    }
+    var total = 0;
+    for (var i = 0; i < data.length; i++) {
+        total += tong_doanh_thu_loai_san_pham(data[i].category);
+    }
+    return total;
 }
 
+// Hiển thị tên loại sản phẩm
+function Hien_ten_loai_san_pham(category) {
+    var data = JSON.parse(localStorage.getItem('productscategory'));
+    if (data === null) {
+        return category;
+    }
+    for (var i = 0; i < data.length; i++) {
+        if (category === data[i].category) {
+            return data[i].categoryname;
+        }
+    }
+    return category;
+}
 
-/*---------------------------------------------------BẮT ĐẦU PHẦN KHÁCH HÀNG------------------------------------------------------------ */
+// Hiển thị kết quả thống kê theo loại sản phẩm
+function show_KQ_Category() {
+    var a = document.getElementById('chon_ThoiGian');
+    var data;
+    var show = document.getElementById('kq_thong_ke');
+    if (a.value === '0') {
+        data = JSON.parse(localStorage.getItem('Rev_Category'));
+    }
+    else {
+        data = JSON.parse(localStorage.getItem('dataShow_Category'))
+    }
+    document.getElementById('All_infor_doanh_thu').innerHTML = '<p style="font-size: 18px; font-weight: bold; color: #1565D6; margin: 20px 0;">Tổng doanh thu theo các tiêu chí trên: ' + Hien_gia_tien(TongDoanhThu_theo_category()) + '</p>';
+    if (data === null) {
+        show.innerHTML = '<div class="no-data">Không có dữ liệu</div>';
+        return;
+    }
+    var s = '<p id="title_thongke">Doanh thu theo loại sản phẩm</p>';
+    s += '<table id="kq_thong_ke_theo_loai_san_pham">';
+    s += '<tr> <th>STT</th> <th>Mã loại</th> <th>Tên loại sản phẩm</th> <th>Số lượng sản phẩm bán ra</th> <th>Tổng doanh thu</th> <th>Xem hoá đơn</th> </tr>'
+    for (var i = 0; i < data.length; i++) {
+        s += '<tr> <td>' + (i + 1) + '</td> <td>';
+        s += data[i].category + '</td> <td>';
+        s += Hien_ten_loai_san_pham(data[i].category) + '</td> <td>';
+        s += '<span class="quantity-badge">' + tong_luong_sp_ban_ra_theo_loai(data[i].category) + '</span></td> <td>';
+        s += '<span class="revenue-amount">' + Hien_gia_tien(tong_doanh_thu_loai_san_pham(data[i].category)) + '</span></td>';
+        s += ' <td class="bnt_ShowOrder_all"> <div class="bnt_ShowOrder" onclick="Hien_ds_hd_theo_loai(\'' + data[i].category + '\')">Xem</div></td></tr>';
+    }
+    show.innerHTML = s + '</table>';
+}
+
+// Hiển thị danh sách hóa đơn theo loại sản phẩm
+function Hien_ds_hd_theo_loai(category) {
+    document.getElementById('bang_hd_thong_ke').style.display = 'block';
+    document.getElementById('nganThoat').style.display = 'block';
+
+    var control1 = document.getElementById('chon_ThoiGian');
+    var data;
+    if (control1.value === '0') {
+        data = JSON.parse(localStorage.getItem('Rev_Category'));
+    } else {
+        data = JSON.parse(localStorage.getItem('dataShow_Category'));
+    }
+
+    if (data === null) {
+        var s = '<button id="thoat_bang_hd_thong_ke" onclick="thoat_danhsach_hd_thongke()" class="close-modal-btn"><i class="fa-solid fa-xmark"></i> Đóng</button>';
+        s += '<div class="no-data">Không có dữ liệu</div>';
+        document.getElementById('bang_hd_thong_ke').innerHTML = s;
+        return;
+    }
+
+    var s = '<button id="thoat_bang_hd_thong_ke" onclick="thoat_danhsach_hd_thongke()" class="close-modal-btn"><i class="fa-solid fa-xmark"></i> Đóng</button>';
+    s += '<div class="modal-header">';
+    s += '<h3 class="modal-title"><i class="fa-solid fa-tags"></i> Hóa đơn theo loại sản phẩm</h3>';
+    s += '</div>';
+    s += '<div class="modal-body">';
+    s += '<div class="info-summary">';
+    s += '<div class="info-item"><strong>Loại:</strong> ' + Hien_ten_loai_san_pham(category) + '</div>';
+    s += '<div class="info-item"><strong>Mã loại:</strong> ' + category + '</div>';
+    s += '</div>';
+
+    s += '<div class="table-container">';
+    s += '<table class="data-table">';
+    s += '<thead><tr>';
+    s += '<th width="100">Mã HĐ</th>';
+    s += '<th>Sản phẩm</th>';
+    s += '<th width="120">Ngày</th>';
+    s += '<th width="150">Tổng tiền</th>';
+    s += '<th width="100">Chi tiết</th>';
+    s += '</tr></thead><tbody>';
+
+    var found = false;
+    for (var i = 0; i < data.length; i++) {
+        if (category === data[i].category) {
+            for (var k = 0; k < data[i].orders.length; k++) {
+                found = true;
+                s += '<tr>';
+                s += '<td class="text-center">#' + data[i].orders[k].orderID + '</td>';
+                s += '<td>' + ds_sp_trong_hd(data[i].orders[k].orderID) + '</td>';
+                s += '<td class="text-center">' + data[i].orders[k].day_Order + '</td>';
+                s += '<td class="text-right revenue-amount">' + Hien_gia_tien(data[i].orders[k].totalPrice) + '</td>';
+                s += '<td class="text-center">';
+                s += '<button class="bnt_xem_hdtk" onclick="hien_chitiet_hd_thongke(' + data[i].orders[k].orderID + ')"><i class="fa-solid fa-eye"></i> Xem</button>';
+                s += '</td>';
+                s += '</tr>';
+            }
+        }
+    }
+
+    if (!found) {
+        s += '<tr><td colspan="5" class="no-data">Không có hóa đơn nào</td></tr>';
+    }
+
+    s += '</tbody></table></div>';
+    s += '</div>';
+    document.getElementById('bang_hd_thong_ke').innerHTML = s;
+}
+
+// Thêm CSS cho phần doanh thu theo loại sản phẩm
+const revenueCategoryStyle = `
+    #kq_thong_ke_theo_loai_san_pham {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    #kq_thong_ke_theo_loai_san_pham th {
+        background: #1565D6;
+        color: white;
+        padding: 15px 12px;
+        text-align: left;
+        font-weight: 600;
+        border: none;
+    }
+    
+    #kq_thong_ke_theo_loai_san_pham td {
+        padding: 12px;
+        border-bottom: 1px solid #e0e0e0;
+        color: #333;
+    }
+    
+    #kq_thong_ke_theo_loai_san_pham tr:hover {
+        background-color: #f8f9fa;
+    }
+    
+    .quantity-badge {
+        background: #e3f2fd;
+        color: #1565D6;
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 12px;
+    }
+    
+    .revenue-amount {
+        color: #e74c3c;
+        font-weight: bold;
+        font-size: 14px;
+    }
+    
+    .modal-header {
+        background: #1565D6;
+        color: white;
+        padding: 20px;
+        border-radius: 10px 10px 0 0;
+        margin: -20px -20px 20px -20px;
+    }
+    
+    .modal-title {
+        margin: 0;
+        font-size: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .info-summary {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        margin-bottom: 20px;
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: 8px;
+    }
+    
+    .info-item {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    .info-item strong {
+        color: #1565D6;
+        font-size: 14px;
+    }
+    
+    .close-modal-btn {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: #dc3545;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 8px 12px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 14px;
+        z-index: 1000;
+    }
+    
+    .close-modal-btn:hover {
+        background: #c82333;
+    }
+    
+    .no-data {
+        text-align: center;
+        padding: 20px;
+        color: #666;
+        font-style: italic;
+    }
+    
+    .table-container {
+        overflow-x: auto;
+        border-radius: 8px;
+        border: 1px solid #e0e0e0;
+    }
+    
+    .data-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+    }
+    
+    .data-table th {
+        background: #f8f9fa;
+        color: #1565D6;
+        padding: 12px;
+        text-align: left;
+        font-weight: 600;
+        border-bottom: 2px solid #1565D6;
+    }
+    
+    .data-table td {
+        padding: 12px;
+        border-bottom: 1px solid #e0e0e0;
+    }
+    
+    .data-table tr:hover {
+        background-color: #f8f9fa;
+    }
+    
+    .text-center {
+        text-align: center;
+    }
+    
+    .text-right {
+        text-align: right;
+    }
+`;
+
+// Thêm style vào document
+if (!document.getElementById('revenue-category-style')) {
+    const styleElement = document.createElement('style');
+    styleElement.id = 'revenue-category-style';
+    styleElement.textContent = revenueCategoryStyle;
+    document.head.appendChild(styleElement);
+}
+/*-----------------------------------------------BẮT ĐẦU PHẦN KHÁCH HÀNG------------------------------------------------------------ */
 /*Hiện Quận - Huyện --> Thực hiện khi lựa chọn của TỈnh thay đổi (onchange) */
 function HienQuanUser() {
     var Tinh = document.getElementById('User_Tinh-tp');
@@ -2108,7 +2634,7 @@ function initFilterModal() {
 
 //     const filteredWards = wards.filter(ward => ward.Quan_HuyenID === districtId);
 
-//     wardsSelect.innerHTML = '<option value="">Chọn Phường / Xã</option>'; // Reset dropdown
+//     wardsSelect.innerHTML = '<option value="">Chọn Phường/Xã</option>'; // Reset dropdown
 //     filteredWards.forEach(ward => {
 //         const option = document.createElement('option');
 //         option.value = ward.PhuongID;
@@ -2116,9 +2642,6 @@ function initFilterModal() {
 //         wardsSelect.appendChild(option);
 //     });
 // }
-
-
-
 
 
 function showProvinces() {
@@ -2414,659 +2937,6 @@ function getProductById(productId) {
     return products.find(p => p.productId === productId);
 }
 
-/*-----------------------------------------------BẮT ĐẦU PHẦN QUẢN LÝ NHẬP HÀNG----------------------------------------------------------*/
-
-// ============= KHỞI TẠO DỮ LIỆU NHẬP HÀNG =============
-function KhoiTaoNhapHang() {
-    if (JSON.parse(localStorage.getItem('PhieuNhapHang')) === null) {
-        var phieuNhap = [
-            {
-                MaPhieuNhap: 1,
-                NgayNhap: '20/11/2024',
-                NhaCungCap: 'Nhà sách Phương Nam',
-                TrangThai: '1', // 0: Đang xử lý, 1: Hoàn thành
-                GhiChu: 'Nhập sách đầu kỳ',
-                TongTien: 8450000,
-                ChiTietNhap: [
-                    { productId: 1, name: 'Tôi thấy hoa vàng trên cỏ xanh', SoLuongNhap: 50, GiaNhap: 69000, ThanhTien: 3450000 },
-                    { productId: 2, name: '3 người thầy vĩ đại', SoLuongNhap: 30, GiaNhap: 42000, ThanhTien: 1260000 },
-                    { productId: 3, name: 'Nếu chỉ còn một ngày để sống', SoLuongNhap: 40, GiaNhap: 140000, ThanhTien: 5600000 }
-                ]
-            },
-            {
-                MaPhieuNhap: 2,
-                NgayNhap: '25/11/2024',
-                NhaCungCap: 'Công ty sách Minh Long',
-                TrangThai: '0', // Đang xử lý
-                GhiChu: 'Nhập sách mới',
-                TongTien: 2780000,
-                ChiTietNhap: [
-                    { productId: 5, name: 'Đừng chỉ đẹp mà không hiểu chuyện', SoLuongNhap: 40, GiaNhap: 97000, ThanhTien: 3880000 },
-                    { productId: 6, name: 'Nhà nàng ở cạnh nhà tôi', SoLuongNhap: 25, GiaNhap: 203000, ThanhTien: 5075000 }
-                ]
-            }
-        ];
-        localStorage.setItem('PhieuNhapHang', JSON.stringify(phieuNhap));
-    }
-}
-
-// ============= HIỂN THỊ DANH SÁCH PHIẾU NHẬP =============
-function Show_Nhap_Hang() {
-    const phieuNhapList = JSON.parse(localStorage.getItem('PhieuNhapHang')) || [];
-
-    let contentHTML = `
-        <div class="content-section">
-            <div class="section-header">
-                <h1 class="section-title">QUẢN LÝ NHẬP HÀNG</h1>
-                <button class="btn-primary" onclick="moModalThemPhieuNhap()">
-                    <i class="fa-solid fa-plus"></i>
-                    Tạo Phiếu Nhập
-                </button>
-            </div>
-
-            <div class="table-container">
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th width="100">Mã PN</th>
-                            <th width="120">Ngày tạo</th>
-                            <th width="200">Nhà cung cấp</th>
-                            <th width="100">Tổng SL</th>
-                            <th width="150">Tổng tiền</th>
-                            <th width="120">Trạng thái</th>
-                            <th width="200">Thao tác</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-    `;
-
-    if (phieuNhapList.length === 0) {
-        contentHTML += `
-            <tr>
-                <td colspan="7" class="no-data">
-                    <i class="fa-solid fa-inbox"></i>
-                    <p>Chưa có phiếu nhập hàng nào</p>
-                </td>
-            </tr>
-        `;
-    } else {
-        phieuNhapList.forEach(phieu => {
-            const isProcessing = phieu.TrangThai === '0';
-            const tongSoLuong = phieu.ChiTietNhap.reduce((total, item) => total + item.SoLuongNhap, 0);
-
-            contentHTML += `
-                <tr>
-                    <td class="text-center">PN${phieu.MaPhieuNhap.toString().padStart(3, '0')}</td>
-                    <td class="text-center">${phieu.NgayNhap}</td>
-                    <td>${phieu.NhaCungCap || 'Không có'}</td>
-                    <td class="text-center">${tongSoLuong}</td>
-                    <td class="text-right">${formatCurrency(phieu.TongTien)}</td>
-                    <td class="text-center">
-                        <span class="status-badge ${isProcessing ? 'status-warning' : 'status-success'}">
-                            ${isProcessing ? 'Đang xử lý' : 'Hoàn thành'}
-                        </span>
-                    </td>
-                    <td class="text-center">
-                        <button class="btn-info btn-sm" onclick="xemChiTietPhieuNhap(${phieu.MaPhieuNhap})">
-                            <i class="fa-solid fa-eye"></i> Chi tiết
-                        </button>
-                        ${isProcessing ? `
-                            <button class="btn-warning btn-sm" onclick="suaPhieuNhap(${phieu.MaPhieuNhap})">
-                                <i class="fa-solid fa-edit"></i> Sửa
-                            </button>
-                            <button class="btn-success btn-sm" onclick="hoanThanhPhieuNhap(${phieu.MaPhieuNhap})">
-                                <i class="fa-solid fa-check"></i> Hoàn thành
-                            </button>
-                        ` : ''}
-                        <button class="btn-danger btn-sm" onclick="xoaPhieuNhap(${phieu.MaPhieuNhap})">
-                            <i class="fa-solid fa-trash"></i> Xóa
-                        </button>
-                    </td>
-                </tr>
-            `;
-        });
-    }
-
-    contentHTML += `
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    `;
-
-    document.getElementById('admin_content').innerHTML = contentHTML;
-}
-
-// ============= MODAL THÊM PHIẾU NHẬP =============
-function moModalThemPhieuNhap() {
-    const modal = document.getElementById('themPhieuNhapModal');
-    modal.style.display = 'block';
-
-    // Reset form
-    document.getElementById('formThemPhieuNhap').reset();
-
-    // Tạo mã phiếu nhập tự động
-    const phieuNhapList = JSON.parse(localStorage.getItem('PhieuNhapHang')) || [];
-    const maMoi = phieuNhapList.length > 0 ? Math.max(...phieuNhapList.map(p => p.MaPhieuNhap)) + 1 : 1;
-    document.getElementById('maPhieuNhap').value = `PN${maMoi.toString().padStart(3, '0')}`;
-
-    // Set ngày mặc định là hôm nay
-    const today = new Date().toISOString().split('T')[0];
-    document.getElementById('ngayNhap').value = today;
-
-    // Reset danh sách sản phẩm
-    document.getElementById('danhSachSanPhamNhap').innerHTML = `
-        <div class="product-item-nhap">
-            <select onchange="capNhatGiaSanPham(this)">
-                <option value="">Chọn sản phẩm</option>
-                ${generateProductOptions()}
-            </select>
-            <input type="number" placeholder="Số lượng" min="1" value="1" onchange="tinhThanhTien(this)">
-            <input type="text" placeholder="Đơn giá" readonly>
-            <input type="text" placeholder="Thành tiền" readonly>
-            <button type="button" class="btn-remove-product" onclick="xoaSanPhamNhap(this)">
-                <i class="fa-solid fa-trash"></i>
-            </button>
-        </div>
-    `;
-
-    capNhatTongTienModal();
-}
-
-function dongModalThemPhieuNhap() {
-    const modal = document.getElementById('themPhieuNhapModal');
-    modal.style.display = 'none';
-    modal.removeAttribute('data-editing-id');
-}
-
-function moModalThemPhieuNhap() {
-    const modal = document.getElementById('themPhieuNhapModal');
-    modal.style.display = 'block';
-
-    // Reset form
-    document.getElementById('formThemPhieuNhap').reset();
-    modal.removeAttribute('data-editing-id');
-
-    // Tạo mã phiếu nhập tự động
-    const phieuNhapList = JSON.parse(localStorage.getItem('PhieuNhapHang')) || [];
-    const maMoi = phieuNhapList.length > 0 ? Math.max(...phieuNhapList.map(p => p.MaPhieuNhap)) + 1 : 1;
-    document.getElementById('maPhieuNhap').value = `PN${maMoi.toString().padStart(3, '0')}`;
-
-    // Set ngày mặc định là hôm nay
-    const today = new Date().toISOString().split('T')[0];
-    document.getElementById('ngayNhap').value = today;
-
-    // Reset danh sách sản phẩm
-    document.getElementById('danhSachSanPhamNhap').innerHTML = `
-        <div class="product-item-nhap">
-            <select onchange="capNhatGiaSanPham(this)">
-                <option value="">Chọn sản phẩm</option>
-                ${generateProductOptions()}
-            </select>
-            <input type="number" placeholder="Số lượng" min="1" value="1" onchange="tinhThanhTien(this)">
-            <input type="text" placeholder="Đơn giá" readonly>
-            <input type="text" placeholder="Thành tiền" readonly>
-            <button type="button" class="btn-remove-product" onclick="xoaSanPhamNhap(this)">
-                <i class="fa-solid fa-trash"></i>
-            </button>
-        </div>
-    `;
-
-    capNhatTongTienModal();
-}
-
-function generateProductOptions() {
-    const products = JSON.parse(localStorage.getItem('product')) || [];
-    return products.map(product =>
-        `<option value="${product.productId}" data-price="${product.price}">${product.name}</option>`
-    ).join('');
-}
-
-function themSanPhamNhap() {
-    const container = document.getElementById('danhSachSanPhamNhap');
-    const newProduct = document.createElement('div');
-    newProduct.className = 'product-item-nhap';
-    newProduct.innerHTML = `
-        <select onchange="capNhatGiaSanPham(this)">
-            <option value="">Chọn sản phẩm</option>
-            ${generateProductOptions()}
-        </select>
-        <input type="number" placeholder="Số lượng" min="1" value="1" onchange="tinhThanhTien(this)">
-        <input type="text" placeholder="Đơn giá" readonly>
-        <input type="text" placeholder="Thành tiền" readonly>
-        <button type="button" class="btn-remove-product" onclick="xoaSanPhamNhap(this)">
-            <i class="fa-solid fa-trash"></i>
-        </button>
-    `;
-    container.appendChild(newProduct);
-}
-
-function xoaSanPhamNhap(button) {
-    const container = document.getElementById('danhSachSanPhamNhap');
-    if (container.children.length > 1) {
-        button.parentElement.remove();
-        capNhatTongTienModal();
-    } else {
-        alert('Phải có ít nhất một sản phẩm trong phiếu nhập!');
-    }
-}
-
-function capNhatGiaSanPham(selectElement) {
-    const selectedOption = selectElement.options[selectElement.selectedIndex];
-    if (selectedOption.value) {
-        const price = parseFloat(selectedOption.getAttribute('data-price')) || 0;
-        const giaNhapInput = selectElement.parentElement.querySelector('input[placeholder="Đơn giá"]');
-        if (giaNhapInput) {
-            // Giá nhập mặc định = 70% giá bán
-            const giaNhap = Math.round(price * 0.7);
-            giaNhapInput.value = formatCurrency(giaNhap);
-            tinhThanhTien(selectElement);
-        }
-    }
-}
-
-function tinhThanhTien(element) {
-    const productItem = element.closest('.product-item-nhap');
-    const soLuongInput = productItem.querySelector('input[placeholder="Số lượng"]');
-    const giaNhapInput = productItem.querySelector('input[placeholder="Đơn giá"]');
-    const thanhTienInput = productItem.querySelector('input[placeholder="Thành tiền"]');
-
-    const soLuong = parseInt(soLuongInput.value) || 0;
-    // Lấy giá nhập và loại bỏ ký tự không phải số
-    const giaNhapText = giaNhapInput.value.replace(/[^\d]/g, '');
-    const giaNhap = parseInt(giaNhapText) || 0;
-    const thanhTien = soLuong * giaNhap;
-
-    thanhTienInput.value = formatCurrency(thanhTien);
-    capNhatTongTienModal();
-}
-
-function capNhatTongTienModal() {
-    let tongSoLuong = 0;
-    let tongTien = 0;
-
-    document.querySelectorAll('.product-item-nhap').forEach(item => {
-        const soLuong = parseInt(item.querySelector('input[placeholder="Số lượng"]').value) || 0;
-        const thanhTien = parseInt(item.querySelector('input[placeholder="Thành tiền"]').value.replace(/\./g, '')) || 0;
-
-        tongSoLuong += soLuong;
-        tongTien += thanhTien;
-    });
-
-    document.getElementById('tongSoLuong').textContent = tongSoLuong;
-    document.getElementById('tongTien').textContent = formatCurrency(tongTien);
-}
-
-// ============= LƯU PHIẾU NHẬP =============
-document.getElementById('formThemPhieuNhap').addEventListener('submit', function (e) {
-    e.preventDefault();
-
-    const modal = document.getElementById('themPhieuNhapModal');
-    const editingId = modal.getAttribute('data-editing-id');
-
-    if (editingId) {
-        // Đang ở chế độ sửa
-        capNhatPhieuNhap(parseInt(editingId));
-    } else {
-        // Đang ở chế độ thêm mới
-        luuPhieuNhapMoi();
-    }
-});
-
-function luuPhieuNhapMoi() {
-    const nhaCungCap = document.getElementById('nhaCungCap').value;
-    const ngayNhap = document.getElementById('ngayNhap').value;
-    const ghiChu = document.getElementById('ghiChu').value;
-
-    if (!nhaCungCap) {
-        alert('Vui lòng nhập tên nhà cung cấp!');
-        return;
-    }
-
-    // Thu thập thông tin sản phẩm
-    const sanPhamNhap = [];
-    let hasError = false;
-
-    document.querySelectorAll('.product-item-nhap').forEach(row => {
-        const sanPhamSelect = row.querySelector('select');
-        const soLuongInput = row.querySelector('input[placeholder="Số lượng"]');
-        const giaNhapInput = row.querySelector('input[placeholder="Đơn giá"]');
-
-        if (sanPhamSelect.value && soLuongInput.value && giaNhapInput.value) {
-            const productId = parseInt(sanPhamSelect.value);
-            const product = getProductById(productId);
-
-            if (product) {
-                const sanPham = {
-                    productId: productId,
-                    name: product.name,
-                    SoLuongNhap: parseInt(soLuongInput.value),
-                    GiaNhap: parseInt(giaNhapInput.value.replace(/\./g, '')),
-                    ThanhTien: parseInt(soLuongInput.value) * parseInt(giaNhapInput.value.replace(/\./g, ''))
-                };
-
-                sanPhamNhap.push(sanPham);
-            }
-        } else if (sanPhamSelect.value || soLuongInput.value || giaNhapInput.value) {
-            hasError = true;
-        }
-    });
-
-    if (hasError) {
-        alert('Vui lòng điền đầy đủ thông tin cho tất cả sản phẩm!');
-        return;
-    }
-
-    if (sanPhamNhap.length === 0) {
-        alert('Vui lòng thêm ít nhất một sản phẩm!');
-        return;
-    }
-
-    // Tạo phiếu nhập mới
-    const phieuNhapList = JSON.parse(localStorage.getItem('PhieuNhapHang')) || [];
-    const maMoi = phieuNhapList.length > 0 ? Math.max(...phieuNhapList.map(p => p.MaPhieuNhap)) + 1 : 1;
-
-    // Định dạng lại ngày nhập
-    const [year, month, day] = ngayNhap.split('-');
-    const ngayNhapFormatted = `${day}/${month}/${year}`;
-
-    const newPhieuNhap = {
-        MaPhieuNhap: maMoi,
-        NgayNhap: ngayNhapFormatted,
-        NhaCungCap: nhaCungCap,
-        GhiChu: ghiChu,
-        ChiTietNhap: sanPhamNhap,
-        TrangThai: '0', // Mặc định là đang xử lý
-        TongTien: sanPhamNhap.reduce((total, item) => total + item.ThanhTien, 0)
-    };
-
-    phieuNhapList.push(newPhieuNhap);
-    localStorage.setItem('PhieuNhapHang', JSON.stringify(phieuNhapList));
-
-    alert('Tạo phiếu nhập thành công!');
-    dongModalThemPhieuNhap();
-    Show_Nhap_Hang();
-}
-
-// ============= MODAL CHI TIẾT PHIẾU NHẬP =============
-function xemChiTietPhieuNhap(maPhieu) {
-    const phieuNhapList = JSON.parse(localStorage.getItem('PhieuNhapHang')) || [];
-    const phieu = phieuNhapList.find(p => p.MaPhieuNhap === maPhieu);
-
-    if (!phieu) {
-        alert('Không tìm thấy phiếu nhập!');
-        return;
-    }
-
-    // Cập nhật thông tin phiếu nhập - SỬA LỖI NaN Ở ĐÂY
-    document.getElementById('detail-ma-pn').textContent = `PN${phieu.MaPhieuNhap.toString().padStart(3, '0')}`;
-    document.getElementById('detail-ngay-tao').textContent = phieu.NgayNhap;
-    document.getElementById('detail-nha-cung-cap').textContent = phieu.NhaCungCap || 'Không có';
-
-    const tongSoLuong = phieu.ChiTietNhap.reduce((total, item) => total + (item.SoLuongNhap || 0), 0);
-    document.getElementById('detail-tong-sl').textContent = tongSoLuong;
-
-    const tongTien = phieu.ChiTietNhap.reduce((total, item) => total + (item.ThanhTien || 0), 0);
-    document.getElementById('detail-tong-tien').textContent = formatCurrency(tongTien);
-
-    // Cập nhật trạng thái
-    const statusElement = document.querySelector('#phieuNhapDetailModal .status-badge');
-    statusElement.textContent = phieu.TrangThai === '0' ? 'ĐANG XỬ LÝ' : 'HOÀN THÀNH';
-    statusElement.className = `status-badge ${phieu.TrangThai === '0' ? 'status-warning' : 'status-completed'}`;
-
-    // Cập nhật danh sách sản phẩm - SỬA LỖI NaN Ở ĐÂY
-    const tbody = document.getElementById('detail-ds-san-pham');
-    tbody.innerHTML = '';
-
-    phieu.ChiTietNhap.forEach((item, index) => {
-        const product = getProductById(item.productId);
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td>${index + 1}</td>
-            <td>
-                <div style="display: flex; align-items: center; gap: 10px;">
-                    <img src="${product?.src || './assets/images/sanpham1.webp'}" alt="Sản phẩm" class="phieu-nhap-product-image">
-                    <span class="phieu-nhap-product-name">${item.name}</span>
-                </div>
-            </td>
-            <td class="phieu-nhap-product-quantity">${item.SoLuongNhap || 0}</td>
-            <td class="phieu-nhap-product-price">${formatCurrency(item.GiaNhap || 0)}</td>
-            <td class="phieu-nhap-product-total">${formatCurrency(item.ThanhTien || 0)}</td>
-        `;
-        tbody.appendChild(row);
-    });
-
-    // Hiển thị modal
-    document.getElementById('phieuNhapDetailModal').style.display = 'flex';
-}
-
-function dongModalChiTietPhieuNhap() {
-    document.getElementById('phieuNhapDetailModal').style.display = 'none';
-}
-
-// ============= CÁC HÀM HỖ TRỢ =============
-function formatCurrency(amount) {
-    return new Intl.NumberFormat('vi-VN', {
-        style: 'currency',
-        currency: 'VND'
-    }).format(amount).replace('₫', 'đ');
-}
-
-function getProductById(productId) {
-    const products = JSON.parse(localStorage.getItem('product')) || [];
-    return products.find(p => p.productId === productId);
-}
-
-function suaPhieuNhap(maPhieu) {
-    const phieuNhapList = JSON.parse(localStorage.getItem('PhieuNhapHang')) || [];
-    const phieuIndex = phieuNhapList.findIndex(p => p.MaPhieuNhap === maPhieu);
-
-    if (phieuIndex === -1) {
-        alert('Không tìm thấy phiếu nhập!');
-        return;
-    }
-
-    const phieu = phieuNhapList[phieuIndex];
-
-    // Kiểm tra trạng thái - chỉ cho sửa khi đang xử lý
-    if (phieu.TrangThai !== '0') {
-        alert('Chỉ có thể sửa phiếu nhập đang ở trạng thái "Đang xử lý"!');
-        return;
-    }
-
-    // Mở modal thêm phiếu nhập ở chế độ sửa
-    const modal = document.getElementById('themPhieuNhapModal');
-    modal.style.display = 'block';
-
-    // Điền thông tin vào form
-    document.getElementById('maPhieuNhap').value = `PN${phieu.MaPhieuNhap.toString().padStart(3, '0')}`;
-    document.getElementById('ngayNhap').value = formatDateForInput(phieu.NgayNhap);
-    document.getElementById('nhaCungCap').value = phieu.NhaCungCap || '';
-    document.getElementById('ghiChu').value = phieu.GhiChu || '';
-
-    // Điền danh sách sản phẩm
-    const container = document.getElementById('danhSachSanPhamNhap');
-    container.innerHTML = '';
-
-    phieu.ChiTietNhap.forEach(item => {
-        const newProduct = document.createElement('div');
-        newProduct.className = 'product-item-nhap';
-        newProduct.innerHTML = `
-            <select onchange="capNhatGiaSanPham(this)">
-                <option value="">Chọn sản phẩm</option>
-                ${generateProductOptions()}
-            </select>
-            <input type="number" placeholder="Số lượng" min="1" value="${item.SoLuongNhap}" onchange="tinhThanhTien(this)">
-            <input type="text" placeholder="Đơn giá" readonly value="${formatCurrency(item.GiaNhap)}">
-            <input type="text" placeholder="Thành tiền" readonly value="${formatCurrency(item.ThanhTien)}">
-            <button type="button" class="btn-remove-product" onclick="xoaSanPhamNhap(this)">
-                <i class="fa-solid fa-trash"></i>
-            </button>
-        `;
-        container.appendChild(newProduct);
-
-        // Chọn sản phẩm trong dropdown
-        const select = newProduct.querySelector('select');
-        select.value = item.productId;
-        // Kích hoạt sự kiện change để cập nhật giá
-        const event = new Event('change');
-        select.dispatchEvent(event);
-    });
-
-    // Lưu mã phiếu đang sửa để cập nhật
-    modal.setAttribute('data-editing-id', maPhieu);
-
-    capNhatTongTienModal();
-}
-
-function capNhatPhieuNhap(maPhieu) {
-    const nhaCungCap = document.getElementById('nhaCungCap').value;
-    const ngayNhap = document.getElementById('ngayNhap').value;
-    const ghiChu = document.getElementById('ghiChu').value;
-
-    if (!nhaCungCap) {
-        alert('Vui lòng nhập tên nhà cung cấp!');
-        return;
-    }
-
-    // Thu thập thông tin sản phẩm
-    const sanPhamNhap = [];
-    let hasError = false;
-
-    document.querySelectorAll('.product-item-nhap').forEach(row => {
-        const sanPhamSelect = row.querySelector('select');
-        const soLuongInput = row.querySelector('input[placeholder="Số lượng"]');
-        const giaNhapInput = row.querySelector('input[placeholder="Đơn giá"]');
-
-        if (sanPhamSelect.value && soLuongInput.value && giaNhapInput.value) {
-            const productId = parseInt(sanPhamSelect.value);
-            const product = getProductById(productId);
-
-            if (product) {
-                const sanPham = {
-                    productId: productId,
-                    name: product.name,
-                    SoLuongNhap: parseInt(soLuongInput.value),
-                    GiaNhap: parseInt(giaNhapInput.value.replace(/\./g, '')),
-                    ThanhTien: parseInt(soLuongInput.value) * parseInt(giaNhapInput.value.replace(/\./g, ''))
-                };
-
-                sanPhamNhap.push(sanPham);
-            }
-        } else if (sanPhamSelect.value || soLuongInput.value || giaNhapInput.value) {
-            hasError = true;
-        }
-    });
-
-    if (hasError) {
-        alert('Vui lòng điền đầy đủ thông tin cho tất cả sản phẩm!');
-        return;
-    }
-
-    if (sanPhamNhap.length === 0) {
-        alert('Vui lòng thêm ít nhất một sản phẩm!');
-        return;
-    }
-
-    // Cập nhật phiếu nhập
-    const phieuNhapList = JSON.parse(localStorage.getItem('PhieuNhapHang')) || [];
-    const phieuIndex = phieuNhapList.findIndex(p => p.MaPhieuNhap === maPhieu);
-
-    if (phieuIndex === -1) {
-        alert('Không tìm thấy phiếu nhập!');
-        return;
-    }
-
-    // Định dạng lại ngày nhập
-    const [year, month, day] = ngayNhap.split('-');
-    const ngayNhapFormatted = `${day}/${month}/${year}`;
-
-    phieuNhapList[phieuIndex] = {
-        ...phieuNhapList[phieuIndex],
-        NgayNhap: ngayNhapFormatted,
-        NhaCungCap: nhaCungCap,
-        GhiChu: ghiChu,
-        ChiTietNhap: sanPhamNhap,
-        TongTien: sanPhamNhap.reduce((total, item) => total + item.ThanhTien, 0)
-    };
-
-    localStorage.setItem('PhieuNhapHang', JSON.stringify(phieuNhapList));
-
-    alert('Cập nhật phiếu nhập thành công!');
-    dongModalThemPhieuNhap();
-    Show_Nhap_Hang();
-}
-
-function hoanThanhPhieuNhap(maPhieu) {
-    if (confirm('Xác nhận hoàn thành phiếu nhập này? Số lượng sản phẩm sẽ được cập nhật vào kho.')) {
-        const phieuNhapList = JSON.parse(localStorage.getItem('PhieuNhapHang')) || [];
-        const phieuIndex = phieuNhapList.findIndex(p => p.MaPhieuNhap === maPhieu);
-
-        if (phieuIndex !== -1) {
-            phieuNhapList[phieuIndex].TrangThai = '1';
-            localStorage.setItem('PhieuNhapHang', JSON.stringify(phieuNhapList));
-
-            // Cập nhật số lượng tồn kho
-            capNhatSoLuongKho(phieuNhapList[phieuIndex].ChiTietNhap);
-
-            alert('Đã hoàn thành phiếu nhập!');
-            Show_Nhap_Hang();
-        }
-    }
-}
-
-function capNhatSoLuongKho(chiTietNhap) {
-    const products = JSON.parse(localStorage.getItem('product')) || [];
-
-    chiTietNhap.forEach(item => {
-        const productIndex = products.findIndex(p => p.productId === item.productId);
-        if (productIndex !== -1) {
-            if (!products[productIndex].inventory) {
-                products[productIndex].inventory = 0;
-            }
-            products[productIndex].inventory += item.SoLuongNhap;
-        }
-    });
-
-    localStorage.setItem('product', JSON.stringify(products));
-}
-
-function xoaPhieuNhap(maPhieu) {
-    if (confirm('Bạn có chắc muốn xóa phiếu nhập này?')) {
-        const phieuNhapList = JSON.parse(localStorage.getItem('PhieuNhapHang')) || [];
-        const updatedList = phieuNhapList.filter(p => p.MaPhieuNhap !== maPhieu);
-        localStorage.setItem('PhieuNhapHang', JSON.stringify(updatedList));
-        Show_Nhap_Hang();
-    }
-}
-
-// ============= XỬ LÝ SỰ KIỆN ĐÓNG MODAL =============
-document.addEventListener('DOMContentLoaded', function () {
-    // Đóng modal chi tiết
-    const closeDetailBtn = document.querySelector('#phieuNhapDetailModal .phieu-nhap-detail-close');
-    if (closeDetailBtn) {
-        closeDetailBtn.addEventListener('click', dongModalChiTietPhieuNhap);
-    }
-
-    // Đóng modal thêm phiếu nhập
-    const closeAddBtn = document.querySelector('#themPhieuNhapModal .phieu-nhap-detail-close');
-    if (closeAddBtn) {
-        closeAddBtn.addEventListener('click', dongModalThemPhieuNhap);
-    }
-
-    // Đóng modal khi click bên ngoài
-    window.addEventListener('click', function (event) {
-        const detailModal = document.getElementById('phieuNhapDetailModal');
-        const addModal = document.getElementById('themPhieuNhapModal');
-
-        if (event.target === detailModal) {
-            dongModalChiTietPhieuNhap();
-        }
-        if (event.target === addModal) {
-            dongModalThemPhieuNhap();
-        }
-    });
-});
 /*-----------------------------------------------BẮT ĐẦU PHẦN QUẢN LÝ SẢN PHẨM---------------------------------------------------------- */
 
 function rendersanpham() {
