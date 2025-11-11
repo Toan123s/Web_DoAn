@@ -34,13 +34,29 @@ body {
     background-color: #E4E9F7;
 }
 
+.logo-text {
+    padding: 10px 20px;
+    font-family: "Georgia", serf;  
+    font-size: 24px;               
+    font-weight: bold;
+    color: #2b3a67;                 
+    letter-spacing: 2px;            
+    text-transform: uppercase;     
+}
+
+.logo-text {
+    background: linear-gradient(90deg, #d48e0c, #ffc46a);
+    background-clip: text;
+    color: transparent;
+    text-shadow: 2px 2px 6px rgba(0,0,0,0.15);
+}
+
 #admin_header {
     height: 50px;
     width: 100%;
     background-image: linear-gradient(to right, #003CBF, #0C53CC, #1565D6);
     display: flex;
     position: relative;
-    padding: 0 80px;
 }
 
 #admin_account {
@@ -53,6 +69,7 @@ body {
     justify-content: center;
     align-items: center;
     color: white;
+    padding: 0 80px;
 }
 
 #admin_account i {
